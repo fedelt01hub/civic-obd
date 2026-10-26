@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Civic OBD - Escáner & Datalogger</title>
+  
+  <!-- PWA Metadata -->
+  <meta name="theme-color" content="#0a0d14">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Civic OBD">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+
+  <style>
+    :root {
+      --bg: #0a0d14;
+      --card-bg: rgba(19, 25, 36, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text: #f0f4f8;
+      --text-dim: #8b9bb4;
+      --accent: #ff2d55;
+      --accent-glow: rgba(255, 45, 85, 0.4);
+      --vtec: #00e676;
+      --vtec-glow: rgba(0, 230, 118, 0.5);
+      --ac-color: #00e5ff;
+      --ac-glow: rgba(0, 229, 255, 0.4);
+      --amber: #ffb300;
+      --card-radius: 16px;
+      --safe-bottom: env(safe-area-inset-bottom, 12px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: calc(75px + var(--safe-bottom));
+    }
+
+    /* Header Bar */
+    header {
+      background: rgba(10, 13, 20, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+    .brand-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #fff;
+    }
+    .brand-badge {
+      font-size: 0.65rem;
+      background: rgba(255, 45, 85, 0.2);
+      color: var(--accent);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .btn-connect {
+      background: linear-gradient(135deg, #ff2d55, #d50000);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px var(--accent-glow);
+      transition: all 0.2s ease;
+    }
+    .btn-connect:active {
+      transform: scale(0.96);
+    }
+    .btn-connect.connected {
+      background: rgba(0, 230, 118, 0.15);
+      color: var(--vtec);
+      border: 1px solid rgba(0, 230, 118, 0.4);
+      box-shadow: 0 0 12px rgba(0, 230, 118, 0.2);
+    }
+
+    /* Install Banner */
+    .install-banner {
+      display: none;
+      background: linear-gradient(90deg, #162032, #1b283d);
+      padding: 10px 16px;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 0.8rem;
+    }
+    .install-banner button {
+      background: var(--vtec);
+      color: #000;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+
+    /* Status Pills */
+    .status-bar {
+      display: flex;
+      gap: 6px;
+      padding: 10px 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .status-bar::-webkit-scrollbar { display: none; }
+
+    .pill {
+      flex: 1;
+      min-width: 65px;
+      text-align: center;
+      padding: 6px 4px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      transition: all 0.2s ease;
+    }
+    .pill.active-vtec {
+      background: rgba(0, 230, 118, 0.2);
+      border-color: var(--vtec);
+      color: #fff;
+      box-shadow: 0 0 14px var(--vtec-glow);
+      animation: pulseVtec 1s infinite alternate;
+    }
+    .pill.active-ac {
+      background: rgba(0, 229, 255, 0.2);
+      border-color: var(--ac-color);
+      color: #fff;
+      box-shadow: 0 0 12px var(--ac-glow);
+    }
+    .pill.active-brake {
+      background: rgba(255, 45, 85, 0.25);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .pill.active-pn {
+      background: rgba(255, 179, 0, 0.2);
+      border-color: var(--amber);
+      color: #fff;
+    }
+    @keyframes pulseVtec {
+      from { transform: scale(1); }
+      to { transform: scale(1.04); }
+    }
+
+    /* Tab Views */
+    .tab-content {
+      display: none;
+      padding: 8px 16px 20px 16px;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Gauge Section */
+    .gauge-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 16px;
+      text-align: center;
+      position: relative;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .gauge-svg-wrap {
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .gauge-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .gauge-inner-info {
+      position: absolute;
+      top: 52%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 100%;
+    }
+    .gauge-rpm-val {
+      font-size: 3.4rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1;
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+    }
+    .gauge-rpm-unit {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
+    .gauge-vss-badge {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-top: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 4px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .gauge-vss-num {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .gauge-vss-unit {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      font-weight: 700;
+    }
+
+    /* Sensor Grid */
+    .grid-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin: 16px 0 8px 4px;
+      text-transform: uppercase;
+    }
+    .sensor-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .sensor-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--card-radius);
+      padding: 12px 14px;
+      position: relative;
+    }
+    .sensor-label {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+    .sensor-val-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .sensor-val {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+    }
+    .sensor-unit {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+    .sensor-bar-bg {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .sensor-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* Datalogger View */
+    .datalogger-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+    .rec-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff2d55, #c2185b);
+      color: #fff;
+      box-shadow: 0 6px 20px var(--accent-glow);
+      transition: transform 0.2s ease;
+    }
+    .rec-btn:active {
+      transform: scale(0.98);
+    }
+    .rec-btn.recording {
+      background: linear-gradient(135deg, #37474f, #212121);
+      color: #ff5252;
+      border: 2px solid #ff5252;
+      animation: recPulse 1.5s infinite;
+    }
+    @keyframes recPulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(255, 82, 82, 0.3); }
+      50% { box-shadow: 0 0 25px rgba(255, 82, 82, 0.7); }
+    }
+
+    .rec-stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--card-border);
+    }
+    .rec-stat-box {
+      text-align: center;
+    }
+    .rec-stat-num {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .rec-stat-label {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* Timers & Runs */
+    .run-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .run-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .run-title {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .run-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .run-box {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 10px 8px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .run-box-time {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--vtec);
+      font-variant-numeric: tabular-nums;
+    }
+    .run-box-lbl {
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* Canvas Chart */
+    .chart-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .chart-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+    canvas {
+      width: 100%;
+      height: 140px;
+      display: block;
+      border-radius: 8px;
+    }
+
+    /* Export Button */
+    .btn-export {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(0, 230, 118, 0.15);
+      border: 1px solid rgba(0, 230, 118, 0.4);
+      color: var(--vtec);
+      font-size: 0.95rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* Diagnostic Tab */
+    .dtc-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .dtc-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 45, 85, 0.3);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .dtc-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+    .dtc-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .dtc-desc {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+      line-height: 1.3;
+    }
+
+    .btn-action {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(10, 13, 20, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      padding: 8px 12px calc(8px + var(--safe-bottom)) 12px;
+      z-index: 100;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.68rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 4px 0;
+      transition: color 0.2s;
+    }
+    .nav-item.active {
+      color: var(--accent);
+    }
+    .nav-icon {
+      font-size: 1.25rem;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-card {
+      background: #141a24;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      max-width: 320px;
+      width: 100%;
+      text-align: center;
+    }
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .modal-text {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .modal-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <img src="icon.svg" class="brand-logo" alt="Civic OBD">
+      <div>
+        <div class="brand-title">CIVIC '99 <span class="brand-badge">BLE 5.0</span></div>
+      </div>
+    </div>
+    <button id="btnConnect" class="btn-connect" onclick="toggleBleConnection()">
+      <span id="bleIcon">⚡</span>
+      <span id="bleStatusText">Conectar BLE</span>
+    </button>
+  </header>
+
+  <!-- PWA Install Banner -->
+  <div id="installBanner" class="install-banner">
+    <span>📲 Instala la App en tu pantalla de inicio</span>
+    <button id="btnInstall">Instalar</button>
+  </div>
+
+  <!-- Status Bar (Pills) -->
+  <div class="status-bar">
+    <div id="pillVtec" class="pill">VTEC</div>
+    <div id="pillAc" class="pill">A/C CLUTCH</div>
+    <div id="pillGear" class="pill">GEAR: N</div>
+    <div id="pillPn" class="pill">P / N</div>
+    <div id="pillBrake" class="pill">FRENO</div>
+    <div id="pillLink" class="pill">ECU: --</div>
+  </div>
+
+  <!-- TAB 1: DASHBOARD -->
+  <main id="tabDashboard" class="tab-content active">
+    <!-- Main Tachometer Gauge -->
+    <div class="gauge-card">
+      <div class="gauge-svg-wrap">
+        <svg class="gauge-svg" viewBox="0 0 300 240">
+          <defs>
+            <linearGradient id="rpmGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#38ef7d"/>
+              <stop offset="65%" stop-color="#ffb300"/>
+              <stop offset="85%" stop-color="#ff2d55"/>
+            </linearGradient>
+            <filter id="gaugeGlow">
+              <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- Background Arc (from -210 deg to +30 deg = 240 deg sweep) -->
+          <path d="M 50 180 A 110 110 0 1 1 250 180" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="14" stroke-linecap="round"/>
+          
+          <!-- Redline Marker (approx 6800 to 8000 RPM) -->
+          <path d="M 218 88 A 110 110 0 0 1 250 180" fill="none" stroke="rgba(255,45,85,0.3)" stroke-width="14" stroke-linecap="round"/>
+
+          <!-- Dynamic Active Arc -->
+          <path id="gaugeProgress" d="M 50 180 A 110 110 0 1 1 250 180" fill="none" stroke="url(#rpmGradient)" stroke-width="14" stroke-linecap="round"
+                stroke-dasharray="515" stroke-dashoffset="515" filter="url(#gaugeGlow)" style="transition: stroke-dashoffset 0.08s linear;"/>
+
+          <!-- Tick Marks -->
+          <text x="46" y="202" fill="#8b9bb4" font-size="11" font-weight="700">0</text>
+          <text x="35" y="130" fill="#8b9bb4" font-size="11" font-weight="700">2</text>
+          <text x="95" y="65" fill="#8b9bb4" font-size="11" font-weight="700">4</text>
+          <text x="195" y="65" fill="#8b9bb4" font-size="11" font-weight="700">6</text>
+          <text x="248" y="130" fill="#ff2d55" font-size="11" font-weight="800">7</text>
+          <text x="246" y="202" fill="#ff2d55" font-size="11" font-weight="800">8</text>
+        </svg>
+
+        <div class="gauge-inner-info">
+          <div id="valRpm" class="gauge-rpm-val">0</div>
+          <div class="gauge-rpm-unit">RPM x1000</div>
+          <div class="gauge-vss-badge">
+            <span id="valVss" class="gauge-vss-num">0</span>
+            <span class="gauge-vss-unit">KM/H</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section A: Motor & Marchas -->
+    <div class="grid-title">SECCIÓN A: Motor y Posición</div>
+    <div class="sensor-grid">
+      <div class="sensor-card">
+        <div class="sensor-label">Acelerador (TPS)</div>
+        <div class="sensor-val-wrap">
+          <span id="valTps" class="sensor-val">0</span>
+          <span class="sensor-unit">%</span>
+        </div>
+        <div class="sensor-bar-bg"><div id="barTps" class="sensor-bar-fill"></div></div>
+      </div>
+
+      <div class="sensor-card">
+        <div class="sensor-label">Válvula Ralentí (IACV)</div>
+        <div class="sensor-val-wrap">
+          <span id="valIacv" class="sensor-val">0</span>
+          <span class="sensor-unit">%</span>
+        </div>
+        <div class="sensor-bar-bg"><div id="barIacv" class="sensor-bar-fill"></div></div>
+      </div>
+    </div>
+
+    <!-- Section B: Admisión & Eléctricos -->
+    <div class="grid-title">SECCIÓN B: Presiones, Temp & Batería</div>
+    <div class="sensor-grid">
+      <div class="sensor-card">
+        <div class="sensor-label">Refrigerante (ECT)</div>
+        <div class="sensor-val-wrap">
+          <span id="valEct" class="sensor-val">--</span>
+          <span class="sensor-unit">°C</span>
+        </div>
+        <div class="sensor-bar-bg"><div id="barEct" class="sensor-bar-fill"></div></div>
+      </div>
+
+      <div class="sensor-card">
+        <div class="sensor-label">Aire Admisión (IAT)</div>
+        <div class="sensor-val-wrap">
+          <span id="valIat" class="sensor-val">--</span>
+          <span class="sensor-unit">°C</span>
+        </div>
+        <div class="sensor-bar-bg"><div id="barIat" class="sensor-bar-fill"></div></div>
+      </div>
+
+      <div class="sensor-card">
+        <div class="sensor-label">Presión Múltiple (MAP)</div>
+        <div class="sensor-val-wrap">
+          <span id="valMap" class="sensor-val">0</span>
+          <span class="sensor-unit">kPa</span>
+        </div>
+        <div style="font-size: 0.72rem; color: var(--text-dim); margin-top: 4px;" id="valMapInHg">0.0 inHg Vac</div>
+      </div>
+
+      <div class="sensor-card">
+        <div class="sensor-label">Batería (Voltaje)</div>
+        <div class="sensor-val-wrap">
+          <span id="valBatt" class="sensor-val">0.0</span>
+          <span class="sensor-unit">V</span>
+        </div>
+        <div style="font-size: 0.72rem; color: var(--text-dim); margin-top: 4px;" id="valEld">ELD: 0.0 A</div>
+      </div>
+    </div>
+
+    <!-- Section C: Inyección & Combustible -->
+    <div class="grid-title">SECCIÓN C: Combustible y Encendido</div>
+    <div class="sensor-grid">
+      <div class="sensor-card">
+        <div class="sensor-label">Tiempo Inyección</div>
+        <div class="sensor-val-wrap">
+          <span id="valInj" class="sensor-val">0.00</span>
+          <span class="sensor-unit">ms</span>
+        </div>
+      </div>
+
+      <div class="sensor-card">
+        <div class="sensor-label">Avance Encendido</div>
+        <div class="sensor-val-wrap">
+          <span id="valIgn" class="sensor-val">0.0</span>
+          <span class="sensor-unit">°BTDC</span>
+        </div>
+      </div>
+
+      <div class="sensor-card">
+        <div class="sensor-label">Sensor O2 Primario</div>
+        <div class="sensor-val-wrap">
+          <span id="valO2" class="sensor-val">0.00</span>
+          <span class="sensor-unit">V</span>
+        </div>
+      </div>
+
+      <div class="sensor-card">
+        <div class="sensor-label">Ajuste Mezcla (SFT / LFT)</div>
+        <div class="sensor-val-wrap">
+          <span id="valTrim" class="sensor-val" style="font-size:1.1rem;">0% / 0%</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- TAB 2: DATALOGGER -->
+  <main id="tabLogger" class="tab-content">
+    <div class="datalogger-card">
+      <button id="btnRecord" class="rec-btn" onclick="toggleRecording()">
+        <span id="recDot">🔴</span>
+        <span id="recLabel">Iniciar Grabación</span>
+      </button>
+
+      <div class="rec-stats">
+        <div class="rec-stat-box">
+          <div id="recDuration" class="rec-stat-num">00:00</div>
+          <div class="rec-stat-label">Tiempo</div>
+        </div>
+        <div class="rec-stat-box">
+          <div id="recSamples" class="rec-stat-num">0</div>
+          <div class="rec-stat-label">Muestras</div>
+        </div>
+        <div class="rec-stat-box">
+          <div id="recHz" class="rec-stat-num">0 Hz</div>
+          <div class="rec-stat-label">Frecuencia</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timer de Aceleración (Runs) -->
+    <div class="run-card">
+      <div class="run-header">
+        <span class="run-title">🏁 Tiradas de Aceleración</span>
+        <span id="runLaunchStatus" style="font-size:0.75rem; color:var(--text-dim); font-weight:700;">Listo para despegar</span>
+      </div>
+      <div class="run-grid">
+        <div class="run-box">
+          <div id="time0to60" class="run-box-time">-- s</div>
+          <div class="run-box-lbl">0 - 60 KM/H</div>
+        </div>
+        <div class="run-box">
+          <div id="time0to100" class="run-box-time">-- s</div>
+          <div class="run-box-lbl">0 - 100 KM/H</div>
+        </div>
+        <div class="run-box">
+          <div id="time400m" class="run-box-time">-- s</div>
+          <div class="run-box-lbl">1/4 MILLA</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Rolling Chart -->
+    <div class="chart-container">
+      <div class="chart-title">📈 Gráfica en Vivo: RPM (Rojo) y TPS (Verde)</div>
+      <canvas id="liveChart" width="600" height="240"></canvas>
+    </div>
+
+    <!-- Export Button -->
+    <button id="btnExportCsv" class="btn-export" onclick="exportCsv()" disabled>
+      💾 Descargar Log a CSV (Excel)
+    </button>
+  </main>
+
+  <!-- TAB 3: DIAGNÓSTICO & DTC -->
+  <main id="tabDiag" class="tab-content">
+    <div class="datalogger-card">
+      <h3 style="font-size:1.05rem; margin-bottom: 6px;">Códigos de Falla OBD (DTC)</h3>
+      <p style="font-size:0.8rem; color:var(--text-dim); margin-bottom: 14px;">Lee la memoria de diagnóstico 0x40-0x5F de la ECU Honda</p>
+
+      <button class="btn-action" style="background: rgba(0, 230, 118, 0.15); border-color: rgba(0, 230, 118, 0.4); color: var(--vtec);" onclick="fetchDtcs()">
+        🔍 Escanear Códigos de Falla
+      </button>
+
+      <button class="btn-action" style="background: rgba(255, 45, 85, 0.15); border-color: rgba(255, 45, 85, 0.4); color: var(--accent);" onclick="confirmClearDtcs()">
+        🗑️ Borrar Códigos (Reset ECU)
+      </button>
+    </div>
+
+    <div id="dtcList" class="dtc-list">
+      <div style="text-align:center; padding: 20px; color: var(--text-dim); font-size: 0.85rem;">
+        Presiona "Escanear Códigos" para consultar la memoria de la ECU.
+      </div>
+    </div>
+
+    <!-- Consola de hardware -->
+    <div class="grid-title">Diagnóstico de Enlace Físico</div>
+    <div class="sensor-card" style="margin-bottom: 12px;">
+      <div style="font-size:0.8rem; line-height: 1.6;" id="diagStatsText">
+        Tramas Enviadas: 0 | Válidas: 0 | CRC Error: 0 | Timeouts: 0
+      </div>
+      <button class="btn-action" style="margin-top: 10px;" onclick="sendBleCmd('ECHO')">
+        🔌 Probar Eco del Transceptor L9637D
+      </button>
+      <button class="btn-action" onclick="toggleEcuFormula()">
+        🔄 Cambiar Fórmula RPM (OBD1 / OBD2)
+      </button>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('tabDashboard', this)">
+      <span class="nav-icon">🏎️</span>
+      <span>Dashboard</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('tabLogger', this)">
+      <span class="nav-icon">📊</span>
+      <span>Datalogger</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('tabDiag', this)">
+      <span class="nav-icon">🔧</span>
+      <span>Diagnóstico</span>
+    </div>
+  </nav>
+
+  <!-- Clear DTC Confirmation Modal -->
+  <div id="clearModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-title">¿Borrar Códigos?</div>
+      <div class="modal-text">Esto enviará el comando de reinicio a la ECU Honda para apagar la luz Check Engine y borrar las fallas almacenadas.</div>
+      <div class="modal-actions">
+        <button class="modal-btn" style="background: #2a3444; color: #fff;" onclick="closeModal()">Cancelar</button>
+        <button class="modal-btn" style="background: var(--accent); color: #fff;" onclick="executeClearDtcs()">Borrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // SERVICIO NORDIC UART (NUS) UUIDs
+    // =========================================================================
+    const NUS_SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+    const NUS_RX_UUID      = '6e400002-b5a3-f393-e0a9-e50e24dcca9e'; // Phone -> ESP32
+    const NUS_TX_UUID      = '6e400003-b5a3-f393-e0a9-e50e24dcca9e'; // ESP32 -> Phone
+
+    let bleDevice = null;
+    let bleServer = null;
+    let rxChar = null;
+    let txChar = null;
+    let isConnected = false;
+
+    // Current State
+    let currentData = {
+      rpm: 0, vss: 0, vtec: false, ac: false, brake: false, pn: false,
+      connected: false, demo: false, gear: 0, ect: 0, iat: 0, map: 0,
+      mapInHg: 0, baro: 0, tps: 0, o2: 0, batt: 0, altFr: 0, eld: 0,
+      ign: 0, inj: 0, sft: 0, lft: 0, iacv: 0, knock: 0, maf: 0, dtcCount: 0
+    };
+    let ecuType = 2;
+
+    // Datalogger Storage
+    let isRecording = false;
+    let recordStartTime = 0;
+    let recordTimerInterval = null;
+    let recordedRows = [];
+    let lastSecondSamples = 0;
+    let sampleRateHz = 0;
+    let chartHistory = [];
+
+    // Acceleration Run State
+    let launchStartTime = 0;
+    let launchActive = false;
+    let run0to60 = null;
+    let run0to100 = null;
+    let run400m = null;
+    let distanceMeters = 0;
+    let lastVssTimestamp = 0;
+
+    // =========================================================================
+    // SERVICE WORKER & PWA INSTALL
+    // =========================================================================
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW reg fail', err));
+    }
+
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('installBanner').style.display = 'flex';
+    });
+    document.getElementById('btnInstall').addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        document.getElementById('installBanner').style.display = 'none';
+      }
+      deferredPrompt = null;
+    });
+
+    // =========================================================================
+    // BLUETOOTH LOW ENERGY (WEB BLUETOOTH API)
+    // =========================================================================
+    async function toggleBleConnection() {
+      if (isConnected) {
+        disconnectBle();
+        return;
+      }
+      try {
+        if (!navigator.bluetooth) {
+          alert('Tu navegador no soporta Web Bluetooth. Usa Google Chrome o Brave en Android, o la app Bluefy en iPhone.');
+          return;
+        }
+
+        document.getElementById('bleStatusText').textContent = 'Buscando...';
+        
+        bleDevice = await navigator.bluetooth.requestDevice({
+          filters: [{ name: 'Civic99-OBD' }],
+          optionalServices: [NUS_SERVICE_UUID]
+        });
+
+        bleDevice.addEventListener('gattserverdisconnected', onBleDisconnected);
+
+        document.getElementById('bleStatusText').textContent = 'Conectando...';
+        bleServer = await bleDevice.gatt.connect();
+
+        const service = await bleServer.getPrimaryService(NUS_SERVICE_UUID);
+        txChar = await service.getCharacteristic(NUS_TX_UUID);
+        rxChar = await service.getCharacteristic(NUS_RX_UUID);
+
+        await txChar.startNotifications();
+        txChar.addEventListener('characteristicvaluechanged', handleBleNotification);
+
+        isConnected = true;
+        updateBleUi(true);
+        console.log('[BLE] Conectado exitosamente.');
+      } catch (err) {
+        console.error('[BLE] Error de conexión:', err);
+        updateBleUi(false);
+      }
+    }
+
+    function disconnectBle() {
+      if (bleDevice && bleDevice.gatt.connected) {
+        bleDevice.gatt.disconnect();
+      }
+      onBleDisconnected();
+    }
+
+    function onBleDisconnected() {
+      isConnected = false;
+      updateBleUi(false);
+      console.log('[BLE] Desconectado.');
+    }
+
+    function updateBleUi(connected) {
+      const btn = document.getElementById('btnConnect');
+      const text = document.getElementById('bleStatusText');
+      const icon = document.getElementById('bleIcon');
+      if (connected) {
+        btn.classList.add('connected');
+        text.textContent = 'Conectado';
+        icon.textContent = '🟢';
+      } else {
+        btn.classList.remove('connected');
+        text.textContent = 'Conectar BLE';
+        icon.textContent = '⚡';
+        document.getElementById('pillLink').textContent = 'ECU: OFF';
+      }
+    }
+
+    async function sendBleCmd(cmd) {
+      if (!rxChar || !isConnected) return;
+      try {
+        const encoder = new TextEncoder();
+        await rxChar.writeValue(encoder.encode(cmd));
+      } catch (e) {
+        console.error('Error enviando comando BLE:', e);
+      }
+    }
+
+    // =========================================================================
+    // TELEMETRY PACKET PARSER (28-BYTE BINARY OR JSON)
+    // =========================================================================
+    function handleBleNotification(event) {
+      const value = event.target.value;
+      if (!value || value.byteLength === 0) return;
+
+      const firstByte = value.getUint8(0);
+
+      // Si empieza con '{', es un mensaje JSON de diagnóstico/DTC
+      if (firstByte === 0x7B) {
+        const decoder = new TextDecoder('utf-8');
+        const jsonStr = decoder.decode(value);
+        handleJsonMessage(jsonStr);
+        return;
+      }
+
+      // Trama Binaria de 28 bytes: Header 0xA5 0x5A 0x1C
+      if (firstByte === 0xA5 && value.byteLength >= 28) {
+        if (value.getUint8(1) !== 0x5A || value.getUint8(2) !== 28) return;
+
+        // Validar Checksum XOR (bytes 2 a 26)
+        let cs = 0;
+        for (let i = 2; i < 27; i++) cs ^= value.getUint8(i);
+        if (cs !== value.getUint8(27)) {
+          console.warn('BLE Checksum mismatch!');
+          return;
+        }
+
+        // Parsear datos
+        const rpm = (value.getUint8(3) << 8) | value.getUint8(4);
+        const vss = value.getUint8(5);
+        const flags = value.getUint8(6);
+        const gear = value.getUint8(7);
+        const ect = value.getUint8(8) - 40;
+        const iat = value.getUint8(9) - 40;
+        const map = value.getUint8(10);
+        const baro = value.getUint8(11);
+        const tps = value.getUint8(12);
+        const o2 = (value.getUint8(13) / 100.0);
+        const batt = (value.getUint8(14) / 10.0);
+        const altFr = value.getUint8(15);
+        const eld = (value.getUint8(16) / 10.0);
+        const ign = (value.getInt8(17) / 2.0);
+        const inj = (((value.getUint8(18) << 8) | value.getUint8(19)) / 100.0);
+        const sft = value.getInt8(20);
+        const lft = value.getInt8(21);
+        const iacv = value.getUint8(22);
+        const knock = value.getUint8(23);
+        const maf = (((value.getUint8(24) << 8) | value.getUint8(25)) / 10.0);
+        const dtcCount = value.getUint8(26);
+
+        // Vacío inHg = (Baro - MAP) * 0.2953
+        const mapInHg = Math.max(0, (baro - map) * 0.2953);
+
+        currentData = {
+          rpm, vss,
+          vtec: !!(flags & 0x01),
+          ac: !!(flags & 0x02),
+          brake: !!(flags & 0x04),
+          pn: !!(flags & 0x08),
+          connected: !!(flags & 0x10),
+          demo: !!(flags & 0x20),
+          gear, ect, iat, map, mapInHg, baro, tps,
+          o2, batt, altFr, eld, ign, inj, sft, lft,
+          iacv, knock, maf, dtcCount
+        };
+
+        lastSecondSamples++;
+        updateUiDashboard(currentData);
+        processDatalogger(currentData);
+        processAccelerationRun(currentData);
+      }
+    }
+
+    function handleJsonMessage(str) {
+      try {
+        const msg = JSON.parse(str);
+        if (msg.type === 'dtc') {
+          renderDtcList(msg.codes);
+        } else if (msg.type === 'clearDtc') {
+          alert(msg.success ? '¡Códigos borrados exitosamente!' : 'No se pudo comunicar con la ECU.');
+          fetchDtcs();
+        } else if (msg.type === 'diag') {
+          document.getElementById('diagStatsText').textContent =
+            `Comandos OK: ${msg.cmdOk} | Errores CRC: ${msg.cmdCrcFail} | Timeouts: ${msg.cmdTimeout} | Bytes RX: ${msg.rxBytes} | Eco OK: ${msg.echoOk}`;
+        } else if (msg.type === 'echo') {
+          alert(`Prueba de Eco de Hardware L9637D:\nEnviados: ${msg.sent}\nRecibidos: ${msg.rx}\nResultado OK: ${msg.ok}`);
+        } else if (msg.type === 'ecuType') {
+          ecuType = msg.val;
+          alert(`Fórmula de RPM configurada a: OBD${ecuType}`);
+        }
+      } catch (e) {
+        console.error('Error parseando JSON BLE:', e);
+      }
+    }
+
+    // =========================================================================
+    // UI DASHBOARD RENDERER
+    // =========================================================================
+    function updateUiDashboard(d) {
+      // Gauge Needle / Progress Arc (0 to 8000 RPM)
+      const maxRpm = 8000;
+      const pct = Math.min(Math.max(d.rpm / maxRpm, 0), 1);
+      const arcLength = 515; // Largo del arco SVG
+      const offset = arcLength - (arcLength * pct);
+      document.getElementById('gaugeProgress').style.strokeDashoffset = offset;
+
+      document.getElementById('valRpm').textContent = d.rpm;
+      document.getElementById('valVss').textContent = d.vss;
+
+      // Status Pills
+      togglePill('pillVtec', d.vtec, 'active-vtec');
+      togglePill('pillAc', d.ac, 'active-ac');
+      togglePill('pillBrake', d.brake, 'active-brake');
+      togglePill('pillPn', d.pn, 'active-pn');
+
+      const gearLabels = ['N', '1st', '2nd', 'D3', 'D4'];
+      document.getElementById('pillGear').textContent = `GEAR: ${gearLabels[d.gear] || 'N'}`;
+
+      const linkPill = document.getElementById('pillLink');
+      if (d.connected) {
+        linkPill.textContent = d.demo ? 'ECU: DEMO' : 'ECU: LINK OK';
+        linkPill.style.color = 'var(--vtec)';
+      } else {
+        linkPill.textContent = 'ECU: BUSCANDO';
+        linkPill.style.color = 'var(--amber)';
+      }
+
+      // Sensor Values
+      document.getElementById('valTps').textContent = d.tps;
+      document.getElementById('barTps').style.width = d.tps + '%';
+
+      document.getElementById('valIacv').textContent = d.iacv;
+      document.getElementById('barIacv').style.width = d.iacv + '%';
+
+      document.getElementById('valEct').textContent = d.ect;
+      document.getElementById('barEct').style.width = Math.min(100, Math.max(0, (d.ect / 120) * 100)) + '%';
+
+      document.getElementById('valIat').textContent = d.iat;
+      document.getElementById('barIat').style.width = Math.min(100, Math.max(0, (d.iat / 80) * 100)) + '%';
+
+      document.getElementById('valMap').textContent = d.map;
+      document.getElementById('valMapInHg').textContent = d.mapInHg.toFixed(1) + ' inHg Vac';
+
+      document.getElementById('valBatt').textContent = d.batt.toFixed(1);
+      document.getElementById('valEld').textContent = `ELD: ${d.eld.toFixed(1)} A`;
+
+      document.getElementById('valInj').textContent = d.inj.toFixed(2);
+      document.getElementById('valIgn').textContent = d.ign.toFixed(1);
+      document.getElementById('valO2').textContent = d.o2.toFixed(2);
+      document.getElementById('valTrim').textContent = `${d.sft}% / ${d.lft}%`;
+    }
+
+    function togglePill(id, active, activeClass) {
+      const el = document.getElementById(id);
+      if (active) el.classList.add(activeClass);
+      else el.classList.remove(activeClass);
+    }
+
+    // =========================================================================
+    // DATALOGGER & CSV EXPORT
+    // =========================================================================
+    function toggleRecording() {
+      if (!isRecording) {
+        startRecording();
+      } else {
+        stopRecording();
+      }
+    }
+
+    function startRecording() {
+      isRecording = true;
+      recordedRows = [];
+      recordStartTime = Date.now();
+
+      const btn = document.getElementById('btnRecord');
+      btn.classList.add('recording');
+      document.getElementById('recLabel').textContent = 'Detener Grabación';
+      document.getElementById('recDot').textContent = '⏹️';
+      document.getElementById('btnExportCsv').disabled = true;
+
+      recordTimerInterval = setInterval(() => {
+        const elapsedSec = Math.floor((Date.now() - recordStartTime) / 1000);
+        const m = String(Math.floor(elapsedSec / 60)).padStart(2, '0');
+        const s = String(elapsedSec % 60).padStart(2, '0');
+        document.getElementById('recDuration').textContent = `${m}:${s}`;
+        document.getElementById('recHz').textContent = `${sampleRateHz} Hz`;
+        sampleRateHz = lastSecondSamples;
+        lastSecondSamples = 0;
+      }, 1000);
+    }
+
+    function stopRecording() {
+      isRecording = false;
+      clearInterval(recordTimerInterval);
+
+      const btn = document.getElementById('btnRecord');
+      btn.classList.remove('recording');
+      document.getElementById('recLabel').textContent = 'Iniciar Grabación';
+      document.getElementById('recDot').textContent = '🔴';
+
+      if (recordedRows.length > 0) {
+        document.getElementById('btnExportCsv').disabled = false;
+      }
+    }
+
+    function processDatalogger(d) {
+      const now = Date.now();
+
+      // Chart history (last 100 samples)
+      chartHistory.push({ rpm: d.rpm, tps: d.tps });
+      if (chartHistory.length > 100) chartHistory.shift();
+      drawChart();
+
+      if (!isRecording) return;
+
+      const row = [
+        now - recordStartTime,
+        d.rpm,
+        d.vss,
+        d.tps,
+        d.map,
+        d.mapInHg.toFixed(1),
+        d.ect,
+        d.iat,
+        d.o2.toFixed(2),
+        d.batt.toFixed(1),
+        d.ign.toFixed(1),
+        d.inj.toFixed(2),
+        d.sft,
+        d.lft,
+        d.vtec ? 1 : 0,
+        d.ac ? 1 : 0,
+        d.brake ? 1 : 0,
+        d.gear
+      ];
+      recordedRows.push(row);
+      document.getElementById('recSamples').textContent = recordedRows.length;
+    }
+
+    function exportCsv() {
+      if (recordedRows.length === 0) return;
+
+      const header = "Timestamp_ms,RPM,VSS_kmh,TPS_pct,MAP_kPa,Vacuum_inHg,ECT_C,IAT_C,O2_V,Batt_V,IGN_deg,INJ_ms,SFT_pct,LFT_pct,VTEC,AC_Clutch,Brake,Gear\n";
+      const csvContent = header + recordedRows.map(r => r.join(',')).join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const now = new Date();
+      const dateStr = now.toISOString().replace(/[:.]/g, '-').slice(0, 19);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `Civic99_Log_${dateStr}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // =========================================================================
+    // ACCELERATION RUNS (0-60, 0-100, 400M)
+    // =========================================================================
+    function processAccelerationRun(d) {
+      const now = Date.now();
+
+      // Detección de salida: detenido (VSS == 0) y de pronto acelera a fondo (TPS > 25% y VSS > 0)
+      if (!launchActive && d.vss === 0 && d.tps > 25) {
+        document.getElementById('runLaunchStatus').textContent = '¡Listo! En espera de movimiento...';
+      }
+
+      if (!launchActive && d.vss > 0 && d.tps > 20) {
+        launchActive = true;
+        launchStartTime = now;
+        run0to60 = null;
+        run0to100 = null;
+        run400m = null;
+        distanceMeters = 0;
+        lastVssTimestamp = now;
+        document.getElementById('runLaunchStatus').textContent = '🚀 ¡Tirada en curso!';
+        document.getElementById('time0to60').textContent = '...';
+        document.getElementById('time0to100').textContent = '...';
+        document.getElementById('time400m').textContent = '...';
+      }
+
+      if (launchActive) {
+        const dt = (now - lastVssTimestamp) / 1000.0;
+        lastVssTimestamp = now;
+        // Metros = velocidad (m/s) * dt
+        distanceMeters += (d.vss / 3.6) * dt;
+
+        const elapsed = (now - launchStartTime) / 1000.0;
+
+        // 0 a 60 km/h
+        if (!run0to60 && d.vss >= 60) {
+          run0to60 = elapsed;
+          document.getElementById('time0to60').textContent = run0to60.toFixed(2) + ' s';
+        }
+
+        // 0 a 100 km/h
+        if (!run0to100 && d.vss >= 100) {
+          run0to100 = elapsed;
+          document.getElementById('time0to100').textContent = run0to100.toFixed(2) + ' s';
+        }
+
+        // 400 metros
+        if (!run400m && distanceMeters >= 400) {
+          run400m = elapsed;
+          document.getElementById('time400m').textContent = run400m.toFixed(2) + ' s';
+          document.getElementById('runLaunchStatus').textContent = `🏁 Tirada completada (${d.vss} km/h trap)`;
+          launchActive = false;
+        }
+
+        // Si se detiene o desacelera prolongadamente, finalizar tirada
+        if (d.vss === 0 && elapsed > 3) {
+          launchActive = false;
+          document.getElementById('runLaunchStatus').textContent = 'Tirada terminada.';
+        }
+      }
+    }
+
+    // =========================================================================
+    // LIVE ROLLING CANVAS CHART
+    // =========================================================================
+    function drawChart() {
+      const canvas = document.getElementById('liveChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.fillStyle = '#101520';
+      ctx.fillRect(0, 0, w, h);
+
+      // Grid lines
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.lineWidth = 1;
+      for (let y = 0; y < h; y += 40) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      if (chartHistory.length < 2) return;
+
+      const step = w / 100;
+
+      // Draw RPM Line (Red)
+      ctx.strokeStyle = '#ff2d55';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      chartHistory.forEach((pt, i) => {
+        const x = i * step;
+        const y = h - (pt.rpm / 8000) * (h - 10);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // Draw TPS Line (Green)
+      ctx.strokeStyle = '#00e676';
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      chartHistory.forEach((pt, i) => {
+        const x = i * step;
+        const y = h - (pt.tps / 100) * (h - 10);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    }
+
+    // =========================================================================
+    // DIAGNOSTIC & DTC CODES
+    // =========================================================================
+    function fetchDtcs() {
+      sendBleCmd('GET_DTC');
+      document.getElementById('dtcList').innerHTML =
+        '<div style="text-align:center; padding: 20px; color: var(--text-dim);">Consultando memoria 0x40-0x5F...</div>';
+    }
+
+    function renderDtcList(codes) {
+      const list = document.getElementById('dtcList');
+      if (!codes || codes.length === 0) {
+        list.innerHTML = `
+          <div style="text-align:center; padding: 24px; background: var(--card-bg); border-radius: 14px; border: 1px solid rgba(0,230,118,0.3);">
+            <div style="font-size: 1.5rem; margin-bottom: 6px;">✅</div>
+            <div style="font-weight: 800; color: var(--vtec); font-size: 0.95rem;">Sin Códigos de Falla</div>
+            <div style="font-size: 0.78rem; color: var(--text-dim); margin-top: 4px;">No hay errores almacenados en la memoria de la ECU.</div>
+          </div>`;
+        return;
+      }
+
+      let html = '';
+      codes.forEach(c => {
+        html += `
+          <div class="dtc-card">
+            <span class="dtc-badge">CÓDIGO ${c.code}</span>
+            <div class="dtc-name">${c.name}</div>
+            <div class="dtc-desc">${c.desc}</div>
+          </div>`;
+      });
+      list.innerHTML = html;
+    }
+
+    function confirmClearDtcs() {
+      document.getElementById('clearModal').classList.add('active');
+    }
+    function closeModal() {
+      document.getElementById('clearModal').classList.remove('active');
+    }
+    function executeClearDtcs() {
+      closeModal();
+      sendBleCmd('CLEAR_DTC');
+    }
+
+    function toggleEcuFormula() {
+      const nextType = ecuType === 2 ? 1 : 2;
+      sendBleCmd(`ECU:${nextType}`);
+    }
+
+    // =========================================================================
+    // NAVIGATION TABS
+    // =========================================================================
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+      document.getElementById(tabId).classList.add('active');
+      el.classList.add('active');
+
+      if (tabId === 'tabLogger') {
+        setTimeout(drawChart, 50);
+      } else if (tabId === 'tabDiag') {
+        sendBleCmd('GET_DIAG');
+      }
+    }
+  </script>
+</body>
+</html>
