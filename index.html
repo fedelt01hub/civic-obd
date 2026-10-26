@@ -198,21 +198,103 @@
       display: block;
     }
 
-    /* Gauge Section */
+    /* Cluster Mode Switcher */
+    .gauge-mode-bar {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 4px;
+      margin-bottom: 12px;
+      gap: 4px;
+    }
+    .gauge-mode-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 8px 4px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .gauge-mode-btn.active {
+      background: var(--card-bg);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    /* Cluster Grid */
+    .cluster-grid {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .cluster-grid.mode-dual {
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 600px) {
+      .cluster-grid.mode-dual {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .cluster-grid.mode-rpm #cardVss {
+      display: none !important;
+    }
+    .cluster-grid.mode-vss #cardRpm {
+      display: none !important;
+    }
+
     .gauge-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 24px;
-      padding: 16px;
+      padding: 14px 12px 16px 12px;
       text-align: center;
       position: relative;
-      margin-bottom: 14px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s ease;
+    }
+    .gauge-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2px 10px 4px 10px;
+    }
+    .gauge-title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--text-dim);
+    }
+    .gauge-mini-badge {
+      font-size: 0.68rem;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 3px 8px;
+      border-radius: 8px;
+      color: var(--text-dim);
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .gauge-mini-badge.active-vtec {
+      background: rgba(0, 230, 118, 0.2);
+      border-color: var(--vtec);
+      color: #fff;
+      box-shadow: 0 0 10px var(--vtec-glow);
+    }
+    .gauge-mini-badge.active-gear {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: rgba(0, 229, 255, 0.4);
+      color: #fff;
     }
 
     .gauge-svg-wrap {
       width: 100%;
-      max-width: 320px;
+      max-width: 310px;
       margin: 0 auto;
       position: relative;
     }
@@ -223,46 +305,26 @@
     }
     .gauge-inner-info {
       position: absolute;
-      top: 52%;
+      top: 53%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
       width: 100%;
     }
-    .gauge-rpm-val {
-      font-size: 3.4rem;
+    .gauge-val-big {
+      font-size: 3.3rem;
       font-weight: 900;
-      letter-spacing: -1px;
+      letter-spacing: -1.5px;
       line-height: 1;
       color: #fff;
       font-variant-numeric: tabular-nums;
     }
-    .gauge-rpm-unit {
-      font-size: 0.85rem;
+    .gauge-unit-lbl {
+      font-size: 0.76rem;
       color: var(--text-dim);
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 2px;
       margin-top: 4px;
-    }
-    .gauge-vss-badge {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 4px;
-      margin-top: 10px;
-      background: rgba(255, 255, 255, 0.06);
-      padding: 4px 14px;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .gauge-vss-num {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: #fff;
-    }
-    .gauge-vss-unit {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      font-weight: 700;
     }
 
     /* Sensor Grid */
@@ -639,17 +701,30 @@
 
   <!-- TAB 1: DASHBOARD -->
   <main id="tabDashboard" class="tab-content active">
-    <!-- Main Tachometer Gauge -->
-    <div class="gauge-card">
-      <div class="gauge-svg-wrap">
-        <svg class="gauge-svg" viewBox="0 0 300 240">
+    <!-- Selector de Modo de Relojes -->
+    <div class="gauge-mode-bar">
+      <button id="btnModeDual" class="gauge-mode-btn active" onclick="setClusterMode('dual')">🏁 Ambos Relojes</button>
+      <button id="btnModeRpm" class="gauge-mode-btn" onclick="setClusterMode('rpm')">🏎️ Tacómetro</button>
+      <button id="btnModeVss" class="gauge-mode-btn" onclick="setClusterMode('vss')">⚡ Velocímetro</button>
+    </div>
+
+    <!-- Contenedor del Cluster (Ambos o Individual) -->
+    <div id="clusterContainer" class="cluster-grid mode-dual">
+      <!-- RELOJ 1: TACÓMETRO -->
+      <div id="cardRpm" class="gauge-card">
+        <div class="gauge-header">
+          <span class="gauge-title">TACÓMETRO</span>
+          <span id="badgeVtecMini" class="gauge-mini-badge">VTEC</span>
+        </div>
+        <div class="gauge-svg-wrap">
+          <svg class="gauge-svg" viewBox="0 0 280 240">
           <defs>
             <linearGradient id="rpmGradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stop-color="#38ef7d"/>
               <stop offset="65%" stop-color="#ffb300"/>
               <stop offset="85%" stop-color="#ff2d55"/>
             </linearGradient>
-            <filter id="gaugeGlow">
+            <filter id="rpmGlow">
               <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
               <feMerge>
                 <feMergeNode in="coloredBlur"/>
@@ -658,31 +733,136 @@
             </filter>
           </defs>
 
-          <!-- Background Arc (from -210 deg to +30 deg = 240 deg sweep) -->
-          <path d="M 50 180 A 110 110 0 1 1 250 180" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="14" stroke-linecap="round"/>
+          <!-- Fondo del Arco (260 deg de barrido) -->
+          <path d="M 69.52 189.14 A 92 92 0 1 1 210.48 189.14" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="12" stroke-linecap="round"/>
           
-          <!-- Redline Marker (approx 6800 to 8000 RPM) -->
-          <path d="M 218 88 A 110 110 0 0 1 250 180" fill="none" stroke="rgba(255,45,85,0.3)" stroke-width="14" stroke-linecap="round"/>
+          <!-- Zona de Advertencia / Redline -->
+          <path d="M 231.99 131.61 A 92 92 0 0 1 210.48 189.14" fill="none" stroke="rgba(255,45,85,0.35)" stroke-width="12" stroke-linecap="round"/>
 
-          <!-- Dynamic Active Arc -->
-          <path id="gaugeProgress" d="M 50 180 A 110 110 0 1 1 250 180" fill="none" stroke="url(#rpmGradient)" stroke-width="14" stroke-linecap="round"
-                stroke-dasharray="515" stroke-dashoffset="515" filter="url(#gaugeGlow)" style="transition: stroke-dashoffset 0.08s linear;"/>
+          <!-- Arco Activo Dinamico -->
+          <path id="gaugeProgress" d="M 69.52 189.14 A 92 92 0 1 1 210.48 189.14" fill="none" stroke="url(#rpmGradient)" stroke-width="12" stroke-linecap="round"
+                stroke-dasharray="417.5" stroke-dashoffset="417.5" filter="url(#rpmGlow)" style="transition: stroke-dashoffset 0.08s linear;"/>
 
-          <!-- Tick Marks -->
-          <text x="46" y="202" fill="#8b9bb4" font-size="11" font-weight="700">0</text>
-          <text x="35" y="130" fill="#8b9bb4" font-size="11" font-weight="700">2</text>
-          <text x="95" y="65" fill="#8b9bb4" font-size="11" font-weight="700">4</text>
-          <text x="195" y="65" fill="#8b9bb4" font-size="11" font-weight="700">6</text>
-          <text x="248" y="130" fill="#ff2d55" font-size="11" font-weight="800">7</text>
-          <text x="246" y="202" fill="#ff2d55" font-size="11" font-weight="800">8</text>
+          <!-- Marcas Radiales (Ticks) -->
+          <g>
+            <line x1="75.7" y1="184.0" x2="66.5" y2="191.7" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="60.4" y1="165.0" x2="53.0" y2="168.3" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="56.7" y1="141.0" x2="44.8" y2="142.5" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="54.0" y1="116.8" x2="46.1" y2="115.5" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="63.9" y1="94.5" x2="53.0" y2="89.4" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="74.6" y1="72.6" x2="68.6" y2="67.4" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="94.9" y1="59.2" x2="88.4" y2="49.0" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="115.7" y1="46.5" x2="113.4" y2="38.8" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="140.0" y1="46.0" x2="140.0" y2="34.0" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="164.3" y1="46.5" x2="166.6" y2="38.8" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="185.1" y1="59.2" x2="191.6" y2="49.0" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="205.4" y1="72.6" x2="211.4" y2="67.4" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="216.1" y1="94.5" x2="227.0" y2="89.4" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="226.0" y1="116.8" x2="233.9" y2="115.5" stroke="#ff2d55" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="223.3" y1="141.0" x2="235.2" y2="142.5" stroke="#ff2d55" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="219.6" y1="165.0" x2="227.0" y2="168.3" stroke="#ff2d55" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="204.3" y1="184.0" x2="213.5" y2="191.7" stroke="#ff2d55" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+
+          <!-- Numeracion Simetrica -->
+          <g>
+            <text x="84.8" y="176.3" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">0</text>
+            <text x="68.6" y="139.4" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">1</text>
+            <text x="74.7" y="99.6" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">2</text>
+            <text x="101.3" y="69.3" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">3</text>
+            <text x="140.0" y="58.0" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">4</text>
+            <text x="178.7" y="69.3" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">5</text>
+            <text x="205.3" y="99.6" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">6</text>
+            <text x="211.4" y="139.4" fill="#ff2d55" font-size="12" font-weight="800" text-anchor="middle" dominant-baseline="central">7</text>
+            <text x="195.2" y="176.3" fill="#ff2d55" font-size="12" font-weight="800" text-anchor="middle" dominant-baseline="central">8</text>
+          </g>
         </svg>
+          <div class="gauge-inner-info">
+            <div id="valRpm" class="gauge-val-big">0</div>
+            <div class="gauge-unit-lbl">RPM x1000</div>
+          </div>
+        </div>
+      </div>
 
-        <div class="gauge-inner-info">
-          <div id="valRpm" class="gauge-rpm-val">0</div>
-          <div class="gauge-rpm-unit">RPM x1000</div>
-          <div class="gauge-vss-badge">
-            <span id="valVss" class="gauge-vss-num">0</span>
-            <span class="gauge-vss-unit">KM/H</span>
+      <!-- RELOJ 2: VELOCÍMETRO -->
+      <div id="cardVss" class="gauge-card">
+        <div class="gauge-header">
+          <span class="gauge-title">VELOCÍMETRO</span>
+          <span id="badgeGearMini" class="gauge-mini-badge">GEAR: N</span>
+        </div>
+        <div class="gauge-svg-wrap">
+          <svg class="gauge-svg" viewBox="0 0 280 240">
+          <defs>
+            <linearGradient id="vssGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#00e5ff"/>
+              <stop offset="65%" stop-color="#ffb300"/>
+              <stop offset="85%" stop-color="#ff2d55"/>
+            </linearGradient>
+            <filter id="vssGlow">
+              <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- Fondo del Arco (260 deg de barrido) -->
+          <path d="M 69.52 189.14 A 92 92 0 1 1 210.48 189.14" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="12" stroke-linecap="round"/>
+          
+          <!-- Zona de Advertencia / Redline -->
+          <path d="M 218.93 82.74 A 92 92 0 0 1 210.48 189.14" fill="none" stroke="rgba(255,45,85,0.35)" stroke-width="12" stroke-linecap="round"/>
+
+          <!-- Arco Activo Dinamico -->
+          <path id="gaugeVssProgress" d="M 69.52 189.14 A 92 92 0 1 1 210.48 189.14" fill="none" stroke="url(#vssGradient)" stroke-width="12" stroke-linecap="round"
+                stroke-dasharray="417.5" stroke-dashoffset="417.5" filter="url(#vssGlow)" style="transition: stroke-dashoffset 0.08s linear;"/>
+
+          <!-- Marcas Radiales (Ticks) -->
+          <g>
+            <line x1="75.7" y1="184.0" x2="66.5" y2="191.7" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="63.3" y1="171.1" x2="56.3" y2="174.9" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="59.4" y1="153.7" x2="47.9" y2="157.0" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="53.3" y1="136.9" x2="45.3" y2="137.5" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="56.7" y1="119.4" x2="44.8" y2="117.8" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="57.8" y1="101.5" x2="50.2" y2="98.9" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="67.9" y1="86.9" x2="57.6" y2="80.7" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="76.1" y1="71.0" x2="70.2" y2="65.5" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="91.3" y1="61.6" x2="84.3" y2="51.8" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="105.1" y1="50.3" x2="101.9" y2="43.0" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="122.8" y1="47.8" x2="120.3" y2="36.0" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="140.0" y1="43.0" x2="140.0" y2="35.0" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="157.2" y1="47.8" x2="159.7" y2="36.0" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="174.9" y1="50.3" x2="178.1" y2="43.0" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="188.7" y1="61.6" x2="195.7" y2="51.8" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="203.9" y1="71.0" x2="209.8" y2="65.5" stroke="#ff2d55" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="212.1" y1="86.9" x2="222.4" y2="80.7" stroke="#ff2d55" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="222.2" y1="101.5" x2="229.8" y2="98.9" stroke="#ff2d55" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="223.3" y1="119.4" x2="235.2" y2="117.8" stroke="#ff2d55" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="226.7" y1="136.9" x2="234.7" y2="137.5" stroke="#ff2d55" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="220.6" y1="153.7" x2="232.1" y2="157.0" stroke="#ff2d55" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="216.7" y1="171.1" x2="223.7" y2="174.9" stroke="#ff2d55" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="204.3" y1="184.0" x2="213.5" y2="191.7" stroke="#ff2d55" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+
+          <!-- Numeracion Simetrica -->
+          <g>
+            <text x="84.8" y="176.3" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">0</text>
+            <text x="70.9" y="150.3" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">20</text>
+            <text x="68.6" y="120.9" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">40</text>
+            <text x="78.2" y="93.0" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">60</text>
+            <text x="98.2" y="71.4" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">80</text>
+            <text x="125.3" y="59.5" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">100</text>
+            <text x="154.7" y="59.5" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">120</text>
+            <text x="181.8" y="71.4" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">140</text>
+            <text x="201.8" y="93.0" fill="#ff2d55" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">160</text>
+            <text x="211.4" y="120.9" fill="#ff2d55" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">180</text>
+            <text x="209.1" y="150.3" fill="#ff2d55" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">200</text>
+            <text x="195.2" y="176.3" fill="#ff2d55" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">220</text>
+          </g>
+        </svg>
+          <div class="gauge-inner-info">
+            <div id="valVss" class="gauge-val-big">0</div>
+            <div class="gauge-unit-lbl">KM / H</div>
           </div>
         </div>
       </div>
@@ -1154,15 +1334,42 @@
     // UI DASHBOARD RENDERER
     // =========================================================================
     function updateUiDashboard(d) {
-      // Gauge Needle / Progress Arc (0 to 8000 RPM)
+      // Tacómetro RPM (0 a 8000 RPM)
       const maxRpm = 8000;
-      const pct = Math.min(Math.max(d.rpm / maxRpm, 0), 1);
-      const arcLength = 515; // Largo del arco SVG
-      const offset = arcLength - (arcLength * pct);
-      document.getElementById('gaugeProgress').style.strokeDashoffset = offset;
-
+      const rpmPct = Math.min(Math.max(d.rpm / maxRpm, 0), 1);
+      const arcLen = 417.5;
+      const rpmOffset = arcLen - (arcLen * rpmPct);
+      const rpmArc = document.getElementById('gaugeProgress');
+      if (rpmArc) rpmArc.style.strokeDashoffset = rpmOffset;
       document.getElementById('valRpm').textContent = d.rpm;
+
+      // Velocímetro VSS (0 a 220 KM/H)
+      const maxVss = 220;
+      const vssPct = Math.min(Math.max(d.vss / maxVss, 0), 1);
+      const vssOffset = arcLen - (arcLen * vssPct);
+      const vssArc = document.getElementById('gaugeVssProgress');
+      if (vssArc) vssArc.style.strokeDashoffset = vssOffset;
       document.getElementById('valVss').textContent = d.vss;
+
+      // Badges dentro de los relojes
+      const vtecBadge = document.getElementById('badgeVtecMini');
+      if (vtecBadge) {
+        if (d.vtec) {
+          vtecBadge.classList.add('active-vtec');
+          vtecBadge.textContent = '⚡ VTEC ON';
+        } else {
+          vtecBadge.classList.remove('active-vtec');
+          vtecBadge.textContent = 'VTEC';
+        }
+      }
+
+      const gearBadge = document.getElementById('badgeGearMini');
+      if (gearBadge) {
+        const gearLabels = ['N', '1st', '2nd', 'D3', 'D4'];
+        gearBadge.textContent = `GEAR: ${gearLabels[d.gear] || 'N'}`;
+        if (d.gear > 0) gearBadge.classList.add('active-gear');
+        else gearBadge.classList.remove('active-gear');
+      }
 
       // Status Pills
       togglePill('pillVtec', d.vtec, 'active-vtec');
@@ -1477,6 +1684,22 @@
     // =========================================================================
     // NAVIGATION TABS
     // =========================================================================
+    function setClusterMode(mode) {
+      const grid = document.getElementById('clusterContainer');
+      document.querySelectorAll('.gauge-mode-btn').forEach(b => b.classList.remove('active'));
+      
+      if (mode === 'dual') {
+        grid.className = 'cluster-grid mode-dual';
+        document.getElementById('btnModeDual').classList.add('active');
+      } else if (mode === 'rpm') {
+        grid.className = 'cluster-grid mode-rpm';
+        document.getElementById('btnModeRpm').classList.add('active');
+      } else if (mode === 'vss') {
+        grid.className = 'cluster-grid mode-vss';
+        document.getElementById('btnModeVss').classList.add('active');
+      }
+    }
+
     function switchTab(tabId, el) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
