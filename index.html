@@ -1516,6 +1516,42 @@
     });
 
     // =========================================================================
+    // SCREEN WAKE LOCK (Mantiene la pantalla encendida durante el viaje)
+    // =========================================================================
+    let wakeLockObj = null;
+    async function requestWakeLock() {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLockObj = await navigator.wakeLock.request('screen');
+          console.log('[WakeLock] Pantalla bloqueada contra suspensión.');
+        }
+      } catch (e) {
+        console.warn('[WakeLock] No se pudo activar WakeLock:', e);
+      }
+    }
+
+    function releaseWakeLock() {
+      if (wakeLockObj) {
+        wakeLockObj.release().catch(() => {});
+        wakeLockObj = null;
+      }
+    }
+
+    document.addEventListener('visibilitychange', async () => {
+      if (document.visibilityState === 'visible' && isConnected) {
+        await requestWakeLock();
+      }
+    });
+
+    window.addEventListener('beforeunload', (e) => {
+      if (isRecording && recordedRows.length > 0) {
+        e.preventDefault();
+        e.returnValue = 'Tienes una grabación de datos en curso. ¿Deseas salir?';
+        return e.returnValue;
+      }
+    });
+
+    // =========================================================================
     // BLUETOOTH LOW ENERGY (WEB BLUETOOTH API)
     // =========================================================================
     async function toggleBleConnection() {
@@ -1529,16 +1565,17 @@
           return;
         }
 
-        document.getElementById('bleStatusText').textContent = 'Buscando...';
-        
-        bleDevice = await navigator.bluetooth.requestDevice({
-          filters: [{ name: 'Civic99-OBD' }],
-          optionalServices: [NUS_SERVICE_UUID]
-        });
-
-        bleDevice.addEventListener('gattserverdisconnected', onBleDisconnected);
-
         document.getElementById('bleStatusText').textContent = 'Conectando...';
+
+        // Si ya teníamos el dispositivo emparejado en esta sesión, reconectar directo
+        if (!bleDevice || !bleDevice.gatt) {
+          bleDevice = await navigator.bluetooth.requestDevice({
+            filters: [{ name: 'Civic99-OBD' }],
+            optionalServices: [NUS_SERVICE_UUID]
+          });
+          bleDevice.addEventListener('gattserverdisconnected', onBleDisconnected);
+        }
+
         bleServer = await bleDevice.gatt.connect();
 
         const service = await bleServer.getPrimaryService(NUS_SERVICE_UUID);
@@ -1550,14 +1587,18 @@
 
         isConnected = true;
         updateBleUi(true);
+        await requestWakeLock();
         console.log('[BLE] Conectado exitosamente.');
       } catch (err) {
         console.error('[BLE] Error de conexión:', err);
+        // Si falló la reconexión rápida, reiniciar bleDevice para volver a mostrar el selector
+        bleDevice = null;
         updateBleUi(false);
       }
     }
 
     function disconnectBle() {
+      releaseWakeLock();
       if (bleDevice && bleDevice.gatt.connected) {
         bleDevice.gatt.disconnect();
       }
@@ -1566,6 +1607,7 @@
 
     function onBleDisconnected() {
       isConnected = false;
+      releaseWakeLock();
       updateBleUi(false);
       console.log('[BLE] Desconectado.');
     }
