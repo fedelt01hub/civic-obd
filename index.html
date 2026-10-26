@@ -1981,7 +1981,12 @@
         d.vtec ? 1 : 0,
         d.ac ? 1 : 0,
         d.brake ? 1 : 0,
-        d.gear
+        d.gear,
+        d.eld.toFixed(1),
+        d.iacv,
+        d.maf.toFixed(1),
+        d.baro,
+        d.knock
       ];
       recordedRows.push(row);
       document.getElementById('recSamples').textContent = recordedRows.length;
@@ -1990,7 +1995,7 @@
     function exportCsv() {
       if (recordedRows.length === 0) return;
 
-      const header = "Timestamp_ms,RPM,VSS_kmh,TPS_pct,MAP_kPa,Vacuum_inHg,ECT_C,IAT_C,O2_V,Batt_V,IGN_deg,INJ_ms,SFT_pct,LFT_pct,VTEC,AC_Clutch,Brake,Gear\n";
+      const header = "Timestamp_ms,RPM,VSS_kmh,TPS_pct,MAP_kPa,Vacuum_inHg,ECT_C,IAT_C,O2_V,Batt_V,IGN_deg,INJ_ms,SFT_pct,LFT_pct,VTEC,AC_Clutch,Brake,Gear,ELD_A,IACV_pct,MAF_gs,Baro_kPa,Knock\n";
       const csvContent = header + recordedRows.map(r => r.join(',')).join('\n');
 
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
