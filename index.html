@@ -202,6 +202,96 @@
     }
 
 
+
+    .s2k-cluster-card {
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.15s ease;
+    }
+    .s2k-cluster-card:active {
+      transform: scale(0.99);
+    }
+    .s2k-fs-badge {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.45);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 4px 10px;
+      border-radius: 8px;
+      pointer-events: auto;
+      text-transform: uppercase;
+      z-index: 10;
+      transition: all 0.2s ease;
+    }
+    .s2k-cluster-card.is-fullscreen {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 99999 !important;
+      background: #000 !important;
+      border-radius: 0 !important;
+      border: none !important;
+      margin: 0 !important;
+      padding: 10px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+      box-shadow: none !important;
+    }
+    .s2k-cluster-card.is-fullscreen .s2k-cluster-svg {
+      width: 100% !important;
+      max-width: 100vw !important;
+      max-height: 98vh !important;
+      height: auto !important;
+    }
+    .s2k-cluster-card.is-fullscreen .s2k-fs-badge {
+      top: 20px;
+      right: 24px;
+      background: rgba(255, 45, 85, 0.3);
+      border-color: rgba(255, 45, 85, 0.6);
+      color: #fff;
+    }
+
+    /* Status dot indicators without emojis */
+    .status-dot-circle {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      background: #ff2d55;
+      box-shadow: 0 0 8px #ff2d55;
+    }
+    .status-dot-circle.connected {
+      background: #00e676;
+      box-shadow: 0 0 8px #00e676;
+    }
+
+    .rec-dot-css {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      background: #fff;
+    }
+    .rec-btn.recording .rec-dot-css {
+      background: #ff1744;
+      box-shadow: 0 0 8px #ff1744;
+      animation: pulseVtec 0.8s infinite alternate;
+    }
+
+    .nav-clean-icon {
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
     /* =========================================================================
      * S2000 DIGITAL CLUSTER STYLES
      * ========================================================================= */
@@ -760,14 +850,14 @@
       </div>
     </div>
     <button id="btnConnect" class="btn-connect" onclick="toggleBleConnection()">
-      <span id="bleIcon">⚡</span>
+      <span id="bleIcon" class="status-dot-circle"></span>
       <span id="bleStatusText">Conectar BLE</span>
     </button>
   </header>
 
   <!-- PWA Install Banner -->
   <div id="installBanner" class="install-banner">
-    <span>📲 Instala la App en tu pantalla de inicio</span>
+    <span>Instala la App en la pantalla de inicio</span>
     <button id="btnInstall">Instalar</button>
   </div>
 
@@ -785,14 +875,13 @@
   <main id="tabDashboard" class="tab-content active">
     <!-- Selector de Modo de Relojes -->
     <div class="gauge-mode-bar">
-      <button id="btnModeS2k" class="gauge-mode-btn active" onclick="setClusterMode('s2k')">🔥 S2000 Digital</button>
-      <button id="btnModeDual" class="gauge-mode-btn" onclick="setClusterMode('dual')">🏁 Relojes Gemelos</button>
-      <button id="btnModeRpm" class="gauge-mode-btn" onclick="setClusterMode('rpm')">🏎️ Tacómetro</button>
-      <button id="btnModeVss" class="gauge-mode-btn" onclick="setClusterMode('vss')">⚡ Velocímetro</button>
+      <button id="btnModeS2k" class="gauge-mode-btn active" onclick="setClusterMode('s2k')">S2000 DIGITAL</button>
+      <button id="btnModeDual" class="gauge-mode-btn" onclick="setClusterMode('dual')">RELOJES GEMELOS</button>
     </div>
 
     <!-- CLÚSTER HONDA S2000 (AP1/AP2) -->
-    <div id="cardS2k" class="s2k-cluster-card">
+    <div id="cardS2k" class="s2k-cluster-card" onclick="toggleS2kFullscreen()">
+      <div class="s2k-fs-badge">PANTALLA COMPLETA</div>
       <svg class="s2k-cluster-svg" viewBox="0 0 720 290">
         <defs>
           <filter id="s2kRedGlow" x="-20%" y="-20%" width="140%" height="140%">
@@ -1249,7 +1338,7 @@
   <main id="tabLogger" class="tab-content">
     <div class="datalogger-card">
       <button id="btnRecord" class="rec-btn" onclick="toggleRecording()">
-        <span id="recDot">🔴</span>
+        <span id="recDot" class="rec-dot-css"></span>
         <span id="recLabel">Iniciar Grabación</span>
       </button>
 
@@ -1272,7 +1361,7 @@
     <!-- Timer de Aceleración (Runs) -->
     <div class="run-card">
       <div class="run-header">
-        <span class="run-title">🏁 Tiradas de Aceleración</span>
+        <span class="run-title">TIRADAS DE ACELERACIÓN</span>
         <span id="runLaunchStatus" style="font-size:0.75rem; color:var(--text-dim); font-weight:700;">Listo para despegar</span>
       </div>
       <div class="run-grid">
@@ -1293,13 +1382,13 @@
 
     <!-- Live Rolling Chart -->
     <div class="chart-container">
-      <div class="chart-title">📈 Gráfica en Vivo: RPM (Rojo) y TPS (Verde)</div>
+      <div class="chart-title">Gráfica en Vivo: RPM y TPS</div>
       <canvas id="liveChart" width="600" height="240"></canvas>
     </div>
 
     <!-- Export Button -->
     <button id="btnExportCsv" class="btn-export" onclick="exportCsv()" disabled>
-      💾 Descargar Log a CSV (Excel)
+      Descargar Log a CSV (Excel)
     </button>
   </main>
 
@@ -1310,11 +1399,11 @@
       <p style="font-size:0.8rem; color:var(--text-dim); margin-bottom: 14px;">Lee la memoria de diagnóstico 0x40-0x5F de la ECU Honda</p>
 
       <button class="btn-action" style="background: rgba(0, 230, 118, 0.15); border-color: rgba(0, 230, 118, 0.4); color: var(--vtec);" onclick="fetchDtcs()">
-        🔍 Escanear Códigos de Falla
+        Escanear Códigos de Falla
       </button>
 
       <button class="btn-action" style="background: rgba(255, 45, 85, 0.15); border-color: rgba(255, 45, 85, 0.4); color: var(--accent);" onclick="confirmClearDtcs()">
-        🗑️ Borrar Códigos (Reset ECU)
+        Borrar Códigos (Reset ECU)
       </button>
     </div>
 
@@ -1331,10 +1420,10 @@
         Tramas Enviadas: 0 | Válidas: 0 | CRC Error: 0 | Timeouts: 0
       </div>
       <button class="btn-action" style="margin-top: 10px;" onclick="sendBleCmd('ECHO')">
-        🔌 Probar Eco del Transceptor L9637D
+        Probar Eco del Transceptor L9637D
       </button>
       <button class="btn-action" onclick="toggleEcuFormula()">
-        🔄 Cambiar Fórmula RPM (OBD1 / OBD2)
+        Cambiar Fórmula RPM (OBD1 / OBD2)
       </button>
     </div>
   </main>
@@ -1342,15 +1431,15 @@
   <!-- Bottom Navigation -->
   <nav class="bottom-nav">
     <div class="nav-item active" onclick="switchTab('tabDashboard', this)">
-      <span class="nav-icon">🏎️</span>
+      <span class="nav-clean-icon">DASH</span>
       <span>Dashboard</span>
     </div>
     <div class="nav-item" onclick="switchTab('tabLogger', this)">
-      <span class="nav-icon">📊</span>
+      <span class="nav-clean-icon">LOG</span>
       <span>Datalogger</span>
     </div>
     <div class="nav-item" onclick="switchTab('tabDiag', this)">
-      <span class="nav-icon">🔧</span>
+      <span class="nav-clean-icon">DIAG</span>
       <span>Diagnóstico</span>
     </div>
   </nav>
@@ -1493,11 +1582,11 @@
       if (connected) {
         btn.classList.add('connected');
         text.textContent = 'Conectado';
-        icon.textContent = '🟢';
+        icon.className = 'status-dot-circle connected';
       } else {
         btn.classList.remove('connected');
         text.textContent = 'Conectar BLE';
-        icon.textContent = '⚡';
+        icon.className = 'status-dot-circle';
         document.getElementById('pillLink').textContent = 'ECU: OFF';
       }
     }
@@ -1635,7 +1724,7 @@
       if (vtecBadge) {
         if (d.vtec) {
           vtecBadge.classList.add('active-vtec');
-          vtecBadge.textContent = '⚡ VTEC ON';
+          vtecBadge.textContent = 'VTEC ON';
         } else {
           vtecBadge.classList.remove('active-vtec');
           vtecBadge.textContent = 'VTEC';
@@ -1704,7 +1793,7 @@
         if (d.vtec) {
           s2kVtecBadge.style.fill = '#00e676';
           s2kVtecBadge.style.filter = 'drop-shadow(0 0 6px #00e676)';
-          s2kVtecBadge.textContent = '⚡ VTEC';
+          s2kVtecBadge.textContent = 'VTEC';
         } else {
           s2kVtecBadge.style.fill = 'rgba(255,255,255,0.2)';
           s2kVtecBadge.style.filter = 'none';
@@ -1833,7 +1922,7 @@
       const btn = document.getElementById('btnRecord');
       btn.classList.add('recording');
       document.getElementById('recLabel').textContent = 'Detener Grabación';
-      document.getElementById('recDot').textContent = '⏹️';
+      
       document.getElementById('btnExportCsv').disabled = true;
 
       recordTimerInterval = setInterval(() => {
@@ -1854,7 +1943,7 @@
       const btn = document.getElementById('btnRecord');
       btn.classList.remove('recording');
       document.getElementById('recLabel').textContent = 'Iniciar Grabación';
-      document.getElementById('recDot').textContent = '🔴';
+      
 
       if (recordedRows.length > 0) {
         document.getElementById('btnExportCsv').disabled = false;
@@ -1932,7 +2021,7 @@
         run400m = null;
         distanceMeters = 0;
         lastVssTimestamp = now;
-        document.getElementById('runLaunchStatus').textContent = '🚀 ¡Tirada en curso!';
+        document.getElementById('runLaunchStatus').textContent = 'Tirada en curso...';
         document.getElementById('time0to60').textContent = '...';
         document.getElementById('time0to100').textContent = '...';
         document.getElementById('time400m').textContent = '...';
@@ -1962,7 +2051,7 @@
         if (!run400m && distanceMeters >= 400) {
           run400m = elapsed;
           document.getElementById('time400m').textContent = run400m.toFixed(2) + ' s';
-          document.getElementById('runLaunchStatus').textContent = `🏁 Tirada completada (${d.vss} km/h trap)`;
+          document.getElementById('runLaunchStatus').textContent = `Tirada completada (${d.vss} km/h trap)`;
           launchActive = false;
         }
 
@@ -2040,7 +2129,7 @@
       if (!codes || codes.length === 0) {
         list.innerHTML = `
           <div style="text-align:center; padding: 24px; background: var(--card-bg); border-radius: 14px; border: 1px solid rgba(0,230,118,0.3);">
-            <div style="font-size: 1.5rem; margin-bottom: 6px;">✅</div>
+            <div style="font-weight: 800; font-size: 1.1rem; color: var(--vtec); margin-bottom: 6px;">ESTADO OK</div>
             <div style="font-weight: 800; color: var(--vtec); font-size: 0.95rem;">Sin Códigos de Falla</div>
             <div style="font-size: 0.78rem; color: var(--text-dim); margin-top: 4px;">No hay errores almacenados en la memoria de la ECU.</div>
           </div>`;
@@ -2090,15 +2179,29 @@
       } else {
         s2k.style.display = 'none';
         grid.style.display = 'grid';
-        if (mode === 'dual') {
-          grid.className = 'cluster-grid mode-dual';
-          document.getElementById('btnModeDual').classList.add('active');
-        } else if (mode === 'rpm') {
-          grid.className = 'cluster-grid mode-rpm';
-          document.getElementById('btnModeRpm').classList.add('active');
-        } else if (mode === 'vss') {
-          grid.className = 'cluster-grid mode-vss';
-          document.getElementById('btnModeVss').classList.add('active');
+        grid.className = 'cluster-grid mode-dual';
+        document.getElementById('btnModeDual').classList.add('active');
+      }
+    }
+
+    function toggleS2kFullscreen() {
+      const card = document.getElementById('cardS2k');
+      const badge = card.querySelector('.s2k-fs-badge');
+      const isFs = card.classList.toggle('is-fullscreen');
+      
+      if (isFs) {
+        if (badge) badge.textContent = 'SALIR [X]';
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          document.documentElement.webkitRequestFullscreen();
+        }
+      } else {
+        if (badge) badge.textContent = 'PANTALLA COMPLETA';
+        if (document.exitFullscreen && document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        } else if (document.webkitExitFullscreen && document.webkitFullscreenElement) {
+          document.webkitExitFullscreen();
         }
       }
     }
