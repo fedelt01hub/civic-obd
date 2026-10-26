@@ -793,7 +793,7 @@
 
     <!-- CLÚSTER HONDA S2000 (AP1/AP2) -->
     <div id="cardS2k" class="s2k-cluster-card">
-      <svg class="s2k-cluster-svg" viewBox="0 0 760 320">
+      <svg class="s2k-cluster-svg" viewBox="0 0 720 290">
         <defs>
           <filter id="s2kRedGlow" x="-20%" y="-20%" width="140%" height="140%">
             <feGaussianBlur stdDeviation="4" result="blur" />
@@ -805,149 +805,164 @@
         </defs>
 
         <!-- Fondo del Clúster / Bezel -->
-        <rect x="10" y="10" width="740" height="300" rx="36" fill="#080a0f" stroke="#1c2430" stroke-width="3"/>
-        <path d="M 40 40 Q 380 -10 720 40 L 730 270 Q 380 290 30 270 Z" fill="#05070a" opacity="0.6"/>
+        <rect x="5" y="5" width="710" height="280" rx="30" fill="#080a0f" stroke="#1c2430" stroke-width="2.5"/>
+        <path d="M 20 25 Q 360 -5 700 25 L 705 255 Q 360 275 15 255 Z" fill="#040608" opacity="0.6"/>
 
-        <!-- Línea guía decorativa de tacómetro -->
-        <path d="M 75 250 Q 230 110 520 78" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="34" stroke-linecap="round"/>
+        <!-- Línea guía / fondo del tacómetro -->
+        <path d="M 80 225 A 220 180 0 0 1 496 158" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="28" stroke-linecap="round"/>
 
         <!-- Segmentos del Tacómetro S2000 (46 segmentos de 0 a 9000 RPM) -->
         <g id="s2kRpmGroup">
-          <polygon id="s2k_rpm_0" points="77.1,228.0 72.6,232.7 92.9,252.0 97.4,247.3" class="s2k-rpm-seg amber" data-rpm="0"/>
-            <polygon id="s2k_rpm_1" points="83.7,221.3 79.2,225.8 99.1,245.5 103.6,240.9" class="s2k-rpm-seg amber" data-rpm="200"/>
-            <polygon id="s2k_rpm_2" points="90.5,214.6 85.9,219.0 105.5,239.1 110.1,234.6" class="s2k-rpm-seg amber" data-rpm="400"/>
-            <polygon id="s2k_rpm_3" points="97.5,208.0 92.8,212.4 112.0,232.7 116.7,228.3" class="s2k-rpm-seg amber" data-rpm="600"/>
-            <polygon id="s2k_rpm_4" points="104.6,201.5 99.8,205.8 118.7,226.5 123.4,222.2" class="s2k-rpm-seg amber" data-rpm="800"/>
-            <polygon id="s2k_rpm_5" points="111.9,195.0 107.0,199.3 125.5,220.3 130.3,216.1" class="s2k-rpm-seg amber" data-rpm="1000"/>
-            <polygon id="s2k_rpm_6" points="119.3,188.7 114.4,192.8 132.5,214.3 137.4,210.1" class="s2k-rpm-seg amber" data-rpm="1200"/>
-            <polygon id="s2k_rpm_7" points="126.9,182.5 121.9,186.5 139.6,208.3 144.6,204.2" class="s2k-rpm-seg amber" data-rpm="1400"/>
-            <polygon id="s2k_rpm_8" points="134.7,176.4 129.6,180.3 146.9,202.4 151.9,198.5" class="s2k-rpm-seg amber" data-rpm="1600"/>
-            <polygon id="s2k_rpm_9" points="142.6,170.4 137.5,174.3 154.3,196.6 159.4,192.8" class="s2k-rpm-seg amber" data-rpm="1800"/>
-            <polygon id="s2k_rpm_10" points="150.7,164.5 145.5,168.3 161.9,191.0 167.1,187.2" class="s2k-rpm-seg amber" data-rpm="2000"/>
-            <polygon id="s2k_rpm_11" points="158.9,158.8 153.6,162.4 169.6,185.4 174.9,181.8" class="s2k-rpm-seg amber" data-rpm="2200"/>
-            <polygon id="s2k_rpm_12" points="167.2,153.1 161.9,156.7 177.5,180.0 182.8,176.4" class="s2k-rpm-seg amber" data-rpm="2400"/>
-            <polygon id="s2k_rpm_13" points="175.8,147.6 170.4,151.1 185.5,174.7 190.9,171.2" class="s2k-rpm-seg amber" data-rpm="2600"/>
-            <polygon id="s2k_rpm_14" points="184.4,142.3 179.0,145.6 193.6,169.5 199.1,166.1" class="s2k-rpm-seg amber" data-rpm="2800"/>
-            <polygon id="s2k_rpm_15" points="193.3,137.1 187.7,140.3 201.9,164.4 207.4,161.2" class="s2k-rpm-seg amber" data-rpm="3000"/>
-            <polygon id="s2k_rpm_16" points="202.2,132.0 196.6,135.1 210.4,159.5 215.9,156.4" class="s2k-rpm-seg amber" data-rpm="3200"/>
-            <polygon id="s2k_rpm_17" points="211.3,127.0 205.7,130.1 218.9,154.7 224.6,151.7" class="s2k-rpm-seg amber" data-rpm="3400"/>
-            <polygon id="s2k_rpm_18" points="220.6,122.2 214.9,125.2 227.7,150.1 233.4,147.2" class="s2k-rpm-seg amber" data-rpm="3600"/>
-            <polygon id="s2k_rpm_19" points="230.0,117.6 224.2,120.4 236.5,145.6 242.3,142.8" class="s2k-rpm-seg amber" data-rpm="3800"/>
-            <polygon id="s2k_rpm_20" points="239.5,113.1 233.7,115.8 245.5,141.2 251.3,138.5" class="s2k-rpm-seg amber" data-rpm="4000"/>
-            <polygon id="s2k_rpm_21" points="249.2,108.8 243.3,111.4 254.6,137.0 260.5,134.5" class="s2k-rpm-seg amber" data-rpm="4200"/>
-            <polygon id="s2k_rpm_22" points="259.0,104.7 253.1,107.2 263.9,133.0 269.8,130.5" class="s2k-rpm-seg amber" data-rpm="4400"/>
-            <polygon id="s2k_rpm_23" points="269.0,100.7 263.0,103.1 273.2,129.1 279.2,126.8" class="s2k-rpm-seg amber" data-rpm="4600"/>
-            <polygon id="s2k_rpm_24" points="279.0,97.0 273.0,99.2 282.8,125.4 288.8,123.2" class="s2k-rpm-seg amber" data-rpm="4800"/>
-            <polygon id="s2k_rpm_25" points="289.3,93.4 283.2,95.5 292.4,121.9 298.5,119.8" class="s2k-rpm-seg amber" data-rpm="5000"/>
-            <polygon id="s2k_rpm_26" points="299.6,89.9 293.5,91.9 302.2,118.5 308.3,116.6" class="s2k-rpm-seg amber" data-rpm="5200"/>
-            <polygon id="s2k_rpm_27" points="310.1,86.7 304.0,88.6 312.1,115.4 318.2,113.5" class="s2k-rpm-seg amber" data-rpm="5400"/>
-            <polygon id="s2k_rpm_28" points="320.7,83.7 314.5,85.4 322.1,112.4 328.3,110.6" class="s2k-rpm-seg amber" data-rpm="5600"/>
-            <polygon id="s2k_rpm_29" points="331.4,80.9 325.2,82.5 332.2,109.6 338.4,108.0" class="s2k-rpm-seg amber" data-rpm="5800"/>
-            <polygon id="s2k_rpm_30" points="342.3,78.2 336.1,79.7 342.5,107.0 348.7,105.5" class="s2k-rpm-seg amber" data-rpm="6000"/>
-            <polygon id="s2k_rpm_31" points="353.3,75.8 347.0,77.2 352.9,104.5 359.2,103.2" class="s2k-rpm-seg amber" data-rpm="6200"/>
-            <polygon id="s2k_rpm_32" points="364.4,73.6 358.1,74.8 363.4,102.3 369.7,101.1" class="s2k-rpm-seg amber" data-rpm="6400"/>
-            <polygon id="s2k_rpm_33" points="375.6,71.6 369.3,72.7 374.1,100.3 380.4,99.2" class="s2k-rpm-seg amber" data-rpm="6600"/>
-            <polygon id="s2k_rpm_34" points="387.0,69.9 380.6,70.8 384.8,98.5 391.1,97.6" class="s2k-rpm-seg redline" data-rpm="6800"/>
-            <polygon id="s2k_rpm_35" points="398.4,68.3 392.1,69.1 395.7,96.9 402.0,96.1" class="s2k-rpm-seg redline" data-rpm="7000"/>
-            <polygon id="s2k_rpm_36" points="410.0,67.0 403.7,67.7 406.7,95.5 413.0,94.9" class="s2k-rpm-seg redline" data-rpm="7200"/>
-            <polygon id="s2k_rpm_37" points="421.7,65.9 415.4,66.5 417.8,94.4 424.2,93.8" class="s2k-rpm-seg redline" data-rpm="7400"/>
-            <polygon id="s2k_rpm_38" points="433.6,65.1 427.2,65.5 429.0,93.5 435.4,93.0" class="s2k-rpm-seg redline" data-rpm="7600"/>
-            <polygon id="s2k_rpm_39" points="445.5,64.5 439.1,64.8 440.3,92.8 446.7,92.5" class="s2k-rpm-seg redline" data-rpm="7800"/>
-            <polygon id="s2k_rpm_40" points="457.5,64.2 451.1,64.3 451.8,92.3 458.2,92.2" class="s2k-rpm-seg redline" data-rpm="8000"/>
-            <polygon id="s2k_rpm_41" points="469.7,64.1 463.3,64.1 463.3,92.1 469.7,92.1" class="s2k-rpm-seg redline" data-rpm="8200"/>
-            <polygon id="s2k_rpm_42" points="481.9,64.2 475.5,64.1 475.0,92.1 481.4,92.2" class="s2k-rpm-seg redline" data-rpm="8400"/>
-            <polygon id="s2k_rpm_43" points="494.3,64.7 487.9,64.4 486.8,92.4 493.2,92.6" class="s2k-rpm-seg redline" data-rpm="8600"/>
-            <polygon id="s2k_rpm_44" points="506.8,65.3 500.4,65.0 498.7,92.9 505.1,93.3" class="s2k-rpm-seg redline" data-rpm="8800"/>
-            <polygon id="s2k_rpm_45" points="519.3,66.3 512.9,65.8 510.7,93.7 517.1,94.2" class="s2k-rpm-seg redline" data-rpm="9000"/>
+          <polygon id="s2k_rpm_0" points="92.6,228.4 93.0,222.0 69.1,220.3 68.6,226.6" class="s2k-rpm-seg amber" data-rpm="0"/>
+            <polygon id="s2k_rpm_1" points="93.8,218.6 94.6,212.3 70.8,209.5 70.0,215.8" class="s2k-rpm-seg amber" data-rpm="200"/>
+            <polygon id="s2k_rpm_2" points="95.8,209.0 96.8,202.7 73.2,198.7 72.1,205.0" class="s2k-rpm-seg amber" data-rpm="400"/>
+            <polygon id="s2k_rpm_3" points="98.4,199.5 99.8,193.2 76.3,188.1 75.0,194.4" class="s2k-rpm-seg amber" data-rpm="600"/>
+            <polygon id="s2k_rpm_4" points="101.7,190.1 103.4,183.9 80.2,177.7 78.5,183.9" class="s2k-rpm-seg amber" data-rpm="800"/>
+            <polygon id="s2k_rpm_5" points="105.7,180.9 107.6,174.8 84.8,167.5 82.8,173.6" class="s2k-rpm-seg amber" data-rpm="1000"/>
+            <polygon id="s2k_rpm_6" points="110.3,171.9 112.5,165.9 90.1,157.5 87.8,163.5" class="s2k-rpm-seg amber" data-rpm="1200"/>
+            <polygon id="s2k_rpm_7" points="115.5,163.2 118.1,157.3 96.1,147.7 93.5,153.6" class="s2k-rpm-seg amber" data-rpm="1400"/>
+            <polygon id="s2k_rpm_8" points="121.4,154.7 124.2,148.9 102.7,138.2 99.9,144.0" class="s2k-rpm-seg amber" data-rpm="1600"/>
+            <polygon id="s2k_rpm_9" points="127.8,146.5 130.9,140.9 110.0,129.1 106.9,134.7" class="s2k-rpm-seg amber" data-rpm="1800"/>
+            <polygon id="s2k_rpm_10" points="134.8,138.6 138.2,133.2 118.0,120.3 114.5,125.7" class="s2k-rpm-seg amber" data-rpm="2000"/>
+            <polygon id="s2k_rpm_11" points="142.3,131.1 146.0,125.9 126.5,111.9 122.8,117.1" class="s2k-rpm-seg amber" data-rpm="2200"/>
+            <polygon id="s2k_rpm_12" points="150.3,123.9 154.4,118.9 135.6,103.9 131.6,108.9" class="s2k-rpm-seg amber" data-rpm="2400"/>
+            <polygon id="s2k_rpm_13" points="158.9,117.2 163.2,112.4 145.3,96.3 141.0,101.1" class="s2k-rpm-seg amber" data-rpm="2600"/>
+            <polygon id="s2k_rpm_14" points="167.8,110.8 172.4,106.3 155.5,89.2 151.0,93.7" class="s2k-rpm-seg amber" data-rpm="2800"/>
+            <polygon id="s2k_rpm_15" points="177.2,104.9 182.0,100.7 166.2,82.6 161.4,86.9" class="s2k-rpm-seg amber" data-rpm="3000"/>
+            <polygon id="s2k_rpm_16" points="187.0,99.4 192.1,95.5 177.4,76.5 172.3,80.5" class="s2k-rpm-seg amber" data-rpm="3200"/>
+            <polygon id="s2k_rpm_17" points="197.1,94.4 202.4,90.8 188.9,71.0 183.6,74.6" class="s2k-rpm-seg amber" data-rpm="3400"/>
+            <polygon id="s2k_rpm_18" points="207.6,89.9 213.1,86.6 200.9,66.0 195.4,69.2" class="s2k-rpm-seg amber" data-rpm="3600"/>
+            <polygon id="s2k_rpm_19" points="218.3,85.9 224.0,83.0 213.2,61.6 207.5,64.5" class="s2k-rpm-seg amber" data-rpm="3800"/>
+            <polygon id="s2k_rpm_20" points="229.3,82.3 235.2,79.8 225.8,57.7 219.9,60.3" class="s2k-rpm-seg amber" data-rpm="4000"/>
+            <polygon id="s2k_rpm_21" points="240.5,79.3 246.6,77.2 238.7,54.5 232.6,56.6" class="s2k-rpm-seg amber" data-rpm="4200"/>
+            <polygon id="s2k_rpm_22" points="251.9,76.8 258.1,75.1 251.8,51.9 245.6,53.6" class="s2k-rpm-seg amber" data-rpm="4400"/>
+            <polygon id="s2k_rpm_23" points="263.5,74.8 269.7,73.5 265.0,50.0 258.7,51.3" class="s2k-rpm-seg amber" data-rpm="4600"/>
+            <polygon id="s2k_rpm_24" points="275.1,73.3 281.5,72.5 278.4,48.7 272.0,49.5" class="s2k-rpm-seg amber" data-rpm="4800"/>
+            <polygon id="s2k_rpm_25" points="286.9,72.4 293.2,72.0 291.8,48.0 285.4,48.4" class="s2k-rpm-seg amber" data-rpm="5000"/>
+            <polygon id="s2k_rpm_26" points="298.6,72.0 305.0,72.0 305.3,48.0 298.9,48.0" class="s2k-rpm-seg amber" data-rpm="5200"/>
+            <polygon id="s2k_rpm_27" points="310.4,72.1 316.8,72.6 318.7,48.7 312.4,48.2" class="s2k-rpm-seg amber" data-rpm="5400"/>
+            <polygon id="s2k_rpm_28" points="322.2,72.8 328.5,73.7 332.1,50.0 325.8,49.0" class="s2k-rpm-seg amber" data-rpm="5600"/>
+            <polygon id="s2k_rpm_29" points="333.9,74.0 340.1,75.4 345.4,51.9 339.1,50.5" class="s2k-rpm-seg amber" data-rpm="5800"/>
+            <polygon id="s2k_rpm_30" points="345.5,75.7 351.6,77.5 358.5,54.5 352.3,52.7" class="s2k-rpm-seg amber" data-rpm="6000"/>
+            <polygon id="s2k_rpm_31" points="357.0,78.0 363.0,80.2 371.3,57.7 365.4,55.5" class="s2k-rpm-seg amber" data-rpm="6200"/>
+            <polygon id="s2k_rpm_32" points="368.3,80.7 374.1,83.4 384.0,61.5 378.1,58.9" class="s2k-rpm-seg amber" data-rpm="6400"/>
+            <polygon id="s2k_rpm_33" points="379.4,84.1 385.0,87.1 396.3,65.9 390.7,62.9" class="s2k-rpm-seg amber" data-rpm="6600"/>
+            <polygon id="s2k_rpm_34" points="390.2,87.9 395.7,91.3 408.3,70.8 402.9,67.5" class="s2k-rpm-seg redline" data-rpm="6800"/>
+            <polygon id="s2k_rpm_35" points="400.8,92.2 406.0,95.9 419.9,76.4 414.7,72.6" class="s2k-rpm-seg redline" data-rpm="7000"/>
+            <polygon id="s2k_rpm_36" points="411.1,97.1 416.1,101.1 431.1,82.4 426.1,78.4" class="s2k-rpm-seg redline" data-rpm="7200"/>
+            <polygon id="s2k_rpm_37" points="421.0,102.4 425.7,106.7 441.9,88.9 437.2,84.6" class="s2k-rpm-seg redline" data-rpm="7400"/>
+            <polygon id="s2k_rpm_38" points="430.5,108.2 435.0,112.7 452.2,96.0 447.7,91.4" class="s2k-rpm-seg redline" data-rpm="7600"/>
+            <polygon id="s2k_rpm_39" points="439.6,114.4 443.8,119.2 461.9,103.5 457.7,98.6" class="s2k-rpm-seg redline" data-rpm="7800"/>
+            <polygon id="s2k_rpm_40" points="448.3,121.0 452.2,126.1 471.2,111.4 467.3,106.3" class="s2k-rpm-seg redline" data-rpm="8000"/>
+            <polygon id="s2k_rpm_41" points="456.5,128.1 460.1,133.4 479.8,119.7 476.2,114.5" class="s2k-rpm-seg redline" data-rpm="8200"/>
+            <polygon id="s2k_rpm_42" points="464.1,135.6 467.5,141.0 487.9,128.5 484.6,123.0" class="s2k-rpm-seg redline" data-rpm="8400"/>
+            <polygon id="s2k_rpm_43" points="471.2,143.4 474.3,149.0 495.4,137.5 492.3,131.9" class="s2k-rpm-seg redline" data-rpm="8600"/>
+            <polygon id="s2k_rpm_44" points="477.8,151.5 480.5,157.3 502.2,146.9 499.4,141.2" class="s2k-rpm-seg redline" data-rpm="8800"/>
+            <polygon id="s2k_rpm_45" points="483.7,159.9 486.2,165.9 508.3,156.6 505.9,150.7" class="s2k-rpm-seg redline" data-rpm="9000"/>
         </g>
 
-        <!-- Numeración de RPM (0 a 9) -->
+        <!-- Marcas radiales (Ticks) -->
+        <g>
+          <line x1="96.8" y1="225.7" x2="92.8" y2="225.4" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="110.1" y1="180.0" x2="106.4" y2="178.6" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="139.0" y1="139.3" x2="135.8" y2="136.8" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="181.1" y1="106.8" x2="178.7" y2="103.5" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="232.8" y1="85.1" x2="231.5" y2="81.4" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="290.1" y1="76.2" x2="289.9" y2="72.2" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="348.2" y1="80.6" x2="349.1" y2="76.8" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="402.3" y1="98.1" x2="404.3" y2="94.7" stroke="#ff2d55" stroke-width="2" stroke-linecap="round"/>
+            <line x1="448.1" y1="127.2" x2="451.0" y2="124.5" stroke="#ff2d55" stroke-width="2" stroke-linecap="round"/>
+            <line x1="481.8" y1="165.5" x2="485.3" y2="163.7" stroke="#ff2d55" stroke-width="2" stroke-linecap="round"/>
+        </g>
+
+        <!-- Numeración de RPM (0 a 9) estrictamente dentro del arco -->
         <g id="s2kNumGroup">
-          <text x="66.2" y="222.1" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">0</text>
-            <text x="101.6" y="188.1" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">1</text>
-            <text x="141.0" y="156.7" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">2</text>
-            <text x="184.4" y="128.3" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">3</text>
-            <text x="231.6" y="103.6" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">4</text>
-            <text x="282.3" y="83.1" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">5</text>
-            <text x="336.4" y="67.3" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">6</text>
-            <text x="393.7" y="56.8" fill="#ff2d55" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">7</text>
-            <text x="454.0" y="52.3" fill="#ff2d55" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">8</text>
-            <text x="517.1" y="54.1" fill="#ff2d55" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">9</text>
-          <text x="96" y="262" fill="#8b9bb4" font-size="11" font-weight="700" letter-spacing="1">x1000r/min</text>
+          <text x="108.7" y="226.8" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">0</text>
+            <text x="121.3" y="184.4" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">1</text>
+            <text x="148.5" y="146.7" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">2</text>
+            <text x="188.1" y="116.5" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">3</text>
+            <text x="236.8" y="96.5" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">4</text>
+            <text x="290.7" y="88.2" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">5</text>
+            <text x="345.4" y="92.3" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">6</text>
+            <text x="396.3" y="108.5" fill="#ff2d55" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">7</text>
+            <text x="439.4" y="135.5" fill="#ff2d55" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">8</text>
+            <text x="471.1" y="171.0" fill="#ff2d55" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">9</text>
+          <text x="105" y="246" fill="#8b9bb4" font-size="10" font-weight="700" letter-spacing="1">x1000r/min</text>
         </g>
 
-        <!-- VELOCÍMETRO DIGITAL CENTRAL (7-Segment Slanted) -->
+        <!-- VELOCÍMETRO DIGITAL CENTRAL (debajo de la cúpula) -->
         <g transform="translate(0, 0)">
           <!-- Flecha Izquierda Direccional -->
-          <polygon points="325,128 340,116 340,123 352,123 352,133 340,133 340,140" fill="#00e676" opacity="0.35"/>
+          <polygon points="230,140 242,130 242,136 252,136 252,144 242,144 242,150" fill="#00e676" opacity="0.35"/>
 
           <!-- Dígito de Velocidad S2000 -->
-          <text id="s2kValVss" x="410" y="152" font-family="'Chakra Petch', 'Orbitron', monospace" font-style="italic" font-weight="900" font-size="82" fill="#ff3333" text-anchor="middle" letter-spacing="-2" filter="url(#s2kRedGlow)">0</text>
-          <text x="478" y="150" font-family="'Chakra Petch', sans-serif" font-weight="800" font-size="14" fill="#8b9bb4">km/h</text>
+          <text id="s2kValVss" x="310" y="160" font-family="'Chakra Petch', 'Orbitron', monospace" font-style="italic" font-weight="900" font-size="78" fill="#ff3333" text-anchor="middle" letter-spacing="-2" filter="url(#s2kRedGlow)">0</text>
+          <text x="376" y="158" font-family="'Chakra Petch', sans-serif" font-weight="800" font-size="13" fill="#8b9bb4">km/h</text>
 
           <!-- Flecha Derecha Direccional -->
-          <polygon points="515,128 500,116 500,123 488,123 488,133 500,133 500,140" fill="#00e676" opacity="0.35"/>
+          <polygon points="415,140 403,130 403,136 393,136 393,144 403,144 403,150" fill="#00e676" opacity="0.35"/>
         </g>
 
-        <!-- RELOJ DE TEMPERATURA REFRIGERANTE (C a H) -->
+        <!-- RELOJ 1: TEMPERATURA REFRIGERANTE (ECT °C) -->
         <g id="s2kTempGroup">
-          <text x="555" y="112" fill="#8b9bb4" font-size="13" font-weight="800">C</text>
-          <!-- Icono Termómetro -->
-          <path d="M 613 103 L 613 95 A 3 3 0 0 1 617 95 L 617 103 A 5 5 0 1 1 613 103 Z" fill="#8b9bb4"/>
-          <text x="672" y="112" fill="#ff2d55" font-size="13" font-weight="800">H</text>
-          <polygon id="s2k_temp_0" points="579.0,110.0 567.0,110.0 568.7,97.2 580.3,100.4" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_1" points="580.8,98.9 569.3,95.2 575.0,83.5 585.0,90.1" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_2" points="585.9,88.8 576.2,81.8 585.1,72.4 592.6,81.8" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_3" points="593.8,80.9 586.8,71.2 598.2,65.0 602.4,76.3" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_4" points="603.9,75.8 600.2,64.3 612.9,62.0 613.4,74.0" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_5" points="615.0,74.0 615.0,62.0 627.8,63.7 624.6,75.3" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_6" points="626.1,75.8 629.8,64.3 641.5,70.0 634.9,80.0" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_7" points="636.2,80.9 643.2,71.2 652.6,80.1 643.2,87.6" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_8" points="644.1,88.8 653.8,81.8 660.0,93.2 648.7,97.4" class="s2k-warn-seg redline"/>
-            <polygon id="s2k_temp_9" points="649.2,98.9 660.7,95.2 663.0,107.9 651.0,108.4" class="s2k-warn-seg redline"/>
+          <text x="555" y="110" fill="#8b9bb4" font-size="12" font-weight="800">C</text>
+          <!-- Icono Termómetro y etiqueta -->
+          <path d="M 613 100 L 613 92 A 3 3 0 0 1 617 92 L 617 100 A 5 5 0 1 1 613 100 Z" fill="#8b9bb4"/>
+          <text x="615" y="118" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle">TEMP</text>
+          <text x="672" y="110" fill="#ff2d55" font-size="12" font-weight="800">H</text>
+          <polygon id="s2k_temp_0" points="581.0,105.0 569.0,105.0 570.7,92.7 582.2,95.9" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_temp_1" points="582.7,94.5 571.3,90.8 576.6,79.6 586.6,86.2" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_temp_2" points="587.5,85.0 577.8,78.0 586.4,69.0 593.8,78.4" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_temp_3" points="595.0,77.5 588.0,67.8 598.9,61.9 603.1,73.2" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_temp_4" points="604.5,72.7 600.8,61.3 613.0,59.0 613.5,71.0" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_temp_5" points="615.0,71.0 615.0,59.0 627.3,60.7 624.1,72.2" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_temp_6" points="625.5,72.7 629.2,61.3 640.4,66.6 633.8,76.6" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_temp_7" points="635.0,77.5 642.0,67.8 651.0,76.4 641.6,83.8" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_temp_8" points="642.5,85.0 652.2,78.0 658.1,88.9 646.8,93.1" class="s2k-warn-seg redline"/>
+            <polygon id="s2k_temp_9" points="647.3,94.5 658.7,90.8 661.0,103.0 649.0,103.5" class="s2k-warn-seg redline"/>
         </g>
 
-        <!-- RELOJ DE BATERÍA / CARGA (E a F) -->
-        <g id="s2kFuelGroup">
-          <text x="595" y="198" fill="#ff2d55" font-size="13" font-weight="800">E</text>
-          <!-- Icono Batería/Voltaje -->
-          <rect x="650" y="190" width="12" height="8" rx="1.5" fill="none" stroke="#8b9bb4" stroke-width="1.5"/>
-          <rect x="654" y="188" width="4" height="2" fill="#8b9bb4"/>
-          <text x="712" y="198" fill="#8b9bb4" font-size="13" font-weight="800">F</text>
-          <polygon id="s2k_fuel_0" points="619.0,195.0 607.0,195.0 608.7,182.2 620.3,185.4" class="s2k-warn-seg redline"/>
-            <polygon id="s2k_fuel_1" points="620.8,183.9 609.3,180.2 615.0,168.5 625.0,175.1" class="s2k-warn-seg redline"/>
-            <polygon id="s2k_fuel_2" points="625.9,173.8 616.2,166.8 625.1,157.4 632.6,166.8" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_fuel_3" points="633.8,165.9 626.8,156.2 638.2,150.0 642.4,161.3" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_fuel_4" points="643.9,160.8 640.2,149.3 652.9,147.0 653.4,159.0" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_fuel_5" points="655.0,159.0 655.0,147.0 667.8,148.7 664.6,160.3" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_fuel_6" points="666.1,160.8 669.8,149.3 681.5,155.0 674.9,165.0" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_fuel_7" points="676.2,165.9 683.2,156.2 692.6,165.1 683.2,172.6" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_fuel_8" points="684.1,173.8 693.8,166.8 700.0,178.2 688.7,182.4" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_fuel_9" points="689.2,183.9 700.7,180.2 703.0,192.9 691.0,193.4" class="s2k-warn-seg amber"/>
+        <!-- RELOJ 2: ACELERADOR EN VIVO (TPS %) [Reemplaza la gasolina que no se sensa] -->
+        <g id="s2kTpsGroup">
+          <text x="555" y="200" fill="#8b9bb4" font-size="11" font-weight="800">0%</text>
+          <!-- Etiqueta TPS Acelerador -->
+          <text x="615" y="194" fill="#00e676" font-size="10" font-weight="800" text-anchor="middle">TPS</text>
+          <text id="s2kTpsValText" x="615" y="208" fill="#e0e6ed" font-size="10" font-weight="700" text-anchor="middle">0%</text>
+          <text x="672" y="200" fill="#ff2d55" font-size="11" font-weight="800">100%</text>
+          <polygon id="s2k_tps_0" points="581.0,195.0 569.0,195.0 570.7,182.7 582.2,185.9" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_tps_1" points="582.7,184.5 571.3,180.8 576.6,169.6 586.6,176.2" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_tps_2" points="587.5,175.0 577.8,168.0 586.4,159.0 593.8,168.4" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_tps_3" points="595.0,167.5 588.0,157.8 598.9,151.9 603.1,163.2" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_tps_4" points="604.5,162.7 600.8,151.3 613.0,149.0 613.5,161.0" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_tps_5" points="615.0,161.0 615.0,149.0 627.3,150.7 624.1,162.2" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_tps_6" points="625.5,162.7 629.2,151.3 640.4,156.6 633.8,166.6" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_tps_7" points="635.0,167.5 642.0,157.8 651.0,166.4 641.6,173.8" class="s2k-warn-seg amber"/>
+            <polygon id="s2k_tps_8" points="642.5,175.0 652.2,168.0 658.1,178.9 646.8,183.1" class="s2k-warn-seg redline"/>
+            <polygon id="s2k_tps_9" points="647.3,184.5 658.7,180.8 661.0,193.0 649.0,193.5" class="s2k-warn-seg redline"/>
         </g>
 
         <!-- PANTALLA LCD INFERIOR (ODÓMETRO / GEAR / VACÍO) -->
-        <g transform="translate(290, 180)">
-          <rect x="0" y="0" width="240" height="42" rx="8" fill="#14080a" stroke="rgba(255,51,51,0.25)" stroke-width="1.5"/>
+        <g transform="translate(200, 178)">
+          <rect x="0" y="0" width="220" height="40" rx="8" fill="#14080a" stroke="rgba(255,51,51,0.25)" stroke-width="1.5"/>
           <!-- Hora y Marcha -->
-          <text id="s2kClock" x="18" y="18" fill="#ff4d4d" font-family="'Chakra Petch', monospace" font-size="13" font-weight="700">12:00</text>
-          <text id="s2kGear" x="120" y="18" fill="#ff4d4d" font-family="'Chakra Petch', monospace" font-size="13" font-weight="800">GEAR: N</text>
-          <text id="s2kVtecBadge" x="225" y="18" fill="rgba(255,255,255,0.2)" font-family="'Chakra Petch', monospace" font-size="11" font-weight="800" text-anchor="end">VTEC</text>
+          <text id="s2kClock" x="14" y="17" fill="#ff4d4d" font-family="'Chakra Petch', monospace" font-size="12" font-weight="700">12:00</text>
+          <text id="s2kGear" x="110" y="17" fill="#ff4d4d" font-family="'Chakra Petch', monospace" font-size="13" font-weight="800" text-anchor="middle">GEAR: N</text>
+          <text id="s2kVtecBadge" x="206" y="17" fill="rgba(255,255,255,0.2)" font-family="'Chakra Petch', monospace" font-size="11" font-weight="800" text-anchor="end">VTEC</text>
           
           <!-- Lectura MAP e inHg -->
-          <text id="s2kOdo" x="18" y="34" fill="#ff7373" font-family="'Chakra Petch', monospace" font-size="12" font-weight="700">MAP 0 kPa</text>
-          <text id="s2kVac" x="225" y="34" fill="#ff7373" font-family="'Chakra Petch', monospace" font-size="12" font-weight="700" text-anchor="end">0.0 inHg Vac</text>
+          <text id="s2kOdo" x="14" y="32" fill="#ff7373" font-family="'Chakra Petch', monospace" font-size="11" font-weight="700">MAP 0 kPa</text>
+          <text id="s2kVac" x="206" y="32" fill="#ff7373" font-family="'Chakra Petch', monospace" font-size="11" font-weight="700" text-anchor="end">0.0 inHg Vac</text>
         </g>
 
         <!-- BANDEJA INFERIOR DE TESTIGOS (WARNING LIGHTS) -->
-        <g transform="translate(60, 260)">
-          <rect x="0" y="0" width="620" height="34" rx="8" fill="#0d1117" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <g transform="translate(45, 236)">
+          <rect x="0" y="0" width="630" height="34" rx="8" fill="#0d1117" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
           
           <!-- TESTIGO FRENO -->
-          <text id="s2kWarnBrake" x="60" y="22" fill="rgba(255,23,68,0.2)" font-size="12" font-weight="900" font-family="sans-serif" text-anchor="middle">BRAKE</text>
+          <text id="s2kWarnBrake" x="55" y="22" fill="rgba(255,23,68,0.2)" font-size="12" font-weight="900" font-family="sans-serif" text-anchor="middle">BRAKE</text>
 
           <!-- TESTIGO BATERÍA -->
-          <g id="s2kWarnBatt" opacity="0.3" transform="translate(140, 10)">
+          <g id="s2kWarnBatt" opacity="0.3" transform="translate(135, 10)">
             <rect x="0" y="3" width="16" height="10" rx="1.5" fill="none" stroke="#ff1744" stroke-width="1.8"/>
             <rect x="4" y="0" width="3" height="3" fill="#ff1744"/>
             <rect x="9" y="0" width="3" height="3" fill="#ff1744"/>
@@ -956,18 +971,18 @@
           </g>
 
           <!-- TESTIGO CHECK ENGINE (CEL) -->
-          <g id="s2kWarnCel" opacity="0.3" transform="translate(230, 9)">
+          <g id="s2kWarnCel" opacity="0.3" transform="translate(225, 9)">
             <path d="M 2 7 L 6 3 L 14 3 L 18 7 L 18 13 L 2 13 Z M 20 6 L 22 6 L 22 10 L 20 10 Z M 0 6 L 2 6 L 2 10 L 0 10 Z" fill="none" stroke="#ffb300" stroke-width="1.8"/>
           </g>
 
           <!-- TESTIGO VTEC -->
-          <text id="s2kWarnVtec" x="350" y="22" fill="rgba(0,230,118,0.2)" font-size="12" font-weight="900" font-family="sans-serif" text-anchor="middle">VTEC</text>
+          <text id="s2kWarnVtec" x="345" y="22" fill="rgba(0,230,118,0.2)" font-size="12" font-weight="900" font-family="sans-serif" text-anchor="middle">VTEC</text>
 
           <!-- TESTIGO A/C CLUTCH -->
           <text id="s2kWarnAc" x="460" y="22" fill="rgba(0,229,255,0.2)" font-size="12" font-weight="900" font-family="sans-serif" text-anchor="middle">A/C CLUTCH</text>
 
           <!-- TESTIGO P / N -->
-          <text id="s2kWarnPn" x="560" y="22" fill="rgba(255,179,0,0.2)" font-size="12" font-weight="900" font-family="sans-serif" text-anchor="middle">P / N</text>
+          <text id="s2kWarnPn" x="570" y="22" fill="rgba(255,179,0,0.2)" font-size="12" font-weight="900" font-family="sans-serif" text-anchor="middle">P / N</text>
         </g>
       </svg>
     </div>
@@ -1667,16 +1682,18 @@
         }
       }
 
-      // 4. Reloj Batería/Voltaje S2000 (10.5V a 14.5V, 10 segmentos)
-      const battPct = Math.min(Math.max((d.batt - 10.5) / 4.0, 0), 1);
-      const activeBattBars = Math.round(battPct * 10);
+      // 4. Reloj TPS Acelerador S2000 (0% a 100%, 10 segmentos reactivos)
+      const tpsPct = Math.min(Math.max(d.tps / 100.0, 0), 1);
+      const activeTpsBars = Math.round(tpsPct * 10);
       for (let i = 0; i < 10; i++) {
-        const bseg = document.getElementById(`s2k_fuel_${i}`);
+        const bseg = document.getElementById(`s2k_tps_${i}`);
         if (bseg) {
-          if (i < activeBattBars) bseg.classList.add('active');
+          if (i < activeTpsBars) bseg.classList.add('active');
           else bseg.classList.remove('active');
         }
       }
+      const tpsTxt = document.getElementById('s2kTpsValText');
+      if (tpsTxt) tpsTxt.textContent = `${d.tps}%`;
 
       // 5. Pantallita LCD Inferior S2000
       const s2kGearEl = document.getElementById('s2kGear');
