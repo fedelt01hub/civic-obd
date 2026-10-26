@@ -1773,6 +1773,16 @@
                 </div>
 
                 <div style="font-size: 0.75rem; font-weight: bold; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                  VTEC y Actuadores (Byte 0x0A: 0x${d10.toString(16).toUpperCase().padStart(2, '0')})
+                </div>
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; margin-bottom: 10px;">
+                  ${bitBadge('B3 (VTEC Pres)', !!(d10 & 0x08), '#00e676')}
+                  ${bitBadge('B2 (VTEC Sol)', !!(d10 & 0x04), '#00e676')}
+                  ${bitBadge('B1', !!(d10 & 0x02), '#888')}
+                  ${bitBadge('B0', !!(d10 & 0x01), '#888')}
+                </div>
+
+                <div style="font-size: 0.75rem; font-weight: bold; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
                   Detector Carga Eléctrica (ELD) y Alternador
                 </div>
                 <div style="font-size: 0.8rem; background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 6px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.06); line-height: 1.5;">
@@ -1894,11 +1904,13 @@
       if (s2kVtecBadge) {
         if (d.vtec) {
           s2kVtecBadge.style.fill = '#00e676';
-          s2kVtecBadge.style.filter = 'drop-shadow(0 0 6px #00e676)';
+          s2kVtecBadge.style.filter = 'drop-shadow(0 0 8px #00e676)';
+          s2kVtecBadge.classList.add('s2k-vtec-glow');
           s2kVtecBadge.textContent = 'VTEC';
         } else {
           s2kVtecBadge.style.fill = 'rgba(255,255,255,0.2)';
           s2kVtecBadge.style.filter = 'none';
+          s2kVtecBadge.classList.remove('s2k-vtec-glow');
           s2kVtecBadge.textContent = 'VTEC';
         }
       }
