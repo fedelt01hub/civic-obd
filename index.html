@@ -1472,6 +1472,7 @@
       ign: 0, inj: 0, sft: 0, lft: 0, iacv: 0, knock: 0, maf: 0, dtcCount: 0
     };
     let ecuType = 2;
+    const GEAR_NAMES = ['N', '1st', '2nd', 'D3', 'D4'];
 
     // Datalogger Storage
     let isRecording = false;
@@ -1696,6 +1697,7 @@
     // UI DASHBOARD RENDERER
     // =========================================================================
     function updateUiDashboard(d) {
+      try {
       // Tacómetro RPM (0 a 8000 RPM)
       const maxRpm = 8000;
       const rpmPct = Math.min(Math.max(d.rpm / maxRpm, 0), 1);
@@ -1727,8 +1729,8 @@
 
       const gearBadge = document.getElementById('badgeGearMini');
       if (gearBadge) {
-        const gearLabels = ['N', '1st', '2nd', 'D3', 'D4'];
-        gearBadge.textContent = `GEAR: ${gearLabels[d.gear] || 'N'}`;
+        
+        gearBadge.textContent = `GEAR: ${GEAR_NAMES[d.gear] || 'N'}`;
         if (d.gear > 0) gearBadge.classList.add('active-gear');
         else gearBadge.classList.remove('active-gear');
       }
@@ -1780,7 +1782,7 @@
 
       // 5. Pantallita LCD Inferior S2000
       const s2kGearEl = document.getElementById('s2kGear');
-      if (s2kGearEl) s2kGearEl.textContent = `GEAR: ${gearLabels[d.gear] || 'N'}`;
+      if (s2kGearEl) s2kGearEl.textContent = `GEAR: ${GEAR_NAMES[d.gear] || 'N'}`;
 
       const s2kVtecBadge = document.getElementById('s2kVtecBadge');
       if (s2kVtecBadge) {
@@ -1854,41 +1856,48 @@
       togglePill('pillBrake', d.brake, 'active-brake');
       togglePill('pillPn', d.pn, 'active-pn');
 
-      const gearLabels = ['N', '1st', '2nd', 'D3', 'D4'];
-      document.getElementById('pillGear').textContent = `GEAR: ${gearLabels[d.gear] || 'N'}`;
+      const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+      const setWidth = (id, val) => { const el = document.getElementById(id); if (el) el.style.width = val; };
+
+      setTxt('pillGear', `GEAR: ${GEAR_NAMES[d.gear] || 'N'}`);
 
       const linkPill = document.getElementById('pillLink');
-      if (d.connected) {
-        linkPill.textContent = d.demo ? 'ECU: DEMO' : 'ECU: LINK OK';
-        linkPill.style.color = 'var(--vtec)';
-      } else {
-        linkPill.textContent = 'ECU: BUSCANDO';
-        linkPill.style.color = 'var(--amber)';
+      if (linkPill) {
+        if (d.connected) {
+          linkPill.textContent = d.demo ? 'ECU: DEMO' : 'ECU: LINK OK';
+          linkPill.style.color = 'var(--vtec)';
+        } else {
+          linkPill.textContent = 'ECU: BUSCANDO';
+          linkPill.style.color = 'var(--amber)';
+        }
       }
 
       // Sensor Values
-      document.getElementById('valTps').textContent = d.tps;
-      document.getElementById('barTps').style.width = d.tps + '%';
+      setTxt('valTps', d.tps);
+      setWidth('barTps', d.tps + '%');
 
-      document.getElementById('valIacv').textContent = d.iacv;
-      document.getElementById('barIacv').style.width = d.iacv + '%';
+      setTxt('valIacv', d.iacv);
+      setWidth('barIacv', d.iacv + '%');
 
-      document.getElementById('valEct').textContent = d.ect;
-      document.getElementById('barEct').style.width = Math.min(100, Math.max(0, (d.ect / 120) * 100)) + '%';
+      setTxt('valEct', d.ect);
+      setWidth('barEct', Math.min(100, Math.max(0, (d.ect / 120) * 100)) + '%');
 
-      document.getElementById('valIat').textContent = d.iat;
-      document.getElementById('barIat').style.width = Math.min(100, Math.max(0, (d.iat / 80) * 100)) + '%';
+      setTxt('valIat', d.iat);
+      setWidth('barIat', Math.min(100, Math.max(0, (d.iat / 80) * 100)) + '%');
 
-      document.getElementById('valMap').textContent = d.map;
-      document.getElementById('valMapInHg').textContent = d.mapInHg.toFixed(1) + ' inHg Vac';
+      setTxt('valMap', d.map);
+      setTxt('valMapInHg', d.mapInHg.toFixed(1) + ' inHg Vac');
 
-      document.getElementById('valBatt').textContent = d.batt.toFixed(1);
-      document.getElementById('valEld').textContent = `ELD: ${d.eld.toFixed(1)} A`;
+      setTxt('valBatt', d.batt.toFixed(1));
+      setTxt('valEld', `ELD: ${d.eld.toFixed(1)} A`);
 
-      document.getElementById('valInj').textContent = d.inj.toFixed(2);
-      document.getElementById('valIgn').textContent = d.ign.toFixed(1);
-      document.getElementById('valO2').textContent = d.o2.toFixed(2);
-      document.getElementById('valTrim').textContent = `${d.sft}% / ${d.lft}%`;
+      setTxt('valInj', d.inj.toFixed(2));
+      setTxt('valIgn', d.ign.toFixed(1));
+      setTxt('valO2', d.o2.toFixed(2));
+      setTxt('valTrim', `${d.sft}% / ${d.lft}%`);
+      } catch (err) {
+        console.error('Error actualizando Dashboard UI:', err);
+      }
     }
 
     function togglePill(id, active, activeClass) {
