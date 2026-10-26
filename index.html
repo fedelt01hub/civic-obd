@@ -1638,7 +1638,7 @@
         const o2 = (value.getUint8(13) / 100.0);
         const batt = (value.getUint8(14) / 10.0);
         const altFr = value.getUint8(15);
-        const eld = (value.getUint8(16) / 10.0);
+        const eld = (value.getUint8(16) / 2.0);
         const ign = (value.getInt8(17) / 2.0);
         const inj = (((value.getUint8(18) << 8) | value.getUint8(19)) / 100.0);
         const sft = value.getInt8(20);
