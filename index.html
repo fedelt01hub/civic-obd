@@ -738,6 +738,96 @@
       line-height: 1.3;
     }
 
+    /* DTC Library */
+    .dtc-lib-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px;
+      margin: 12px 0 16px 0;
+    }
+    .dtc-lib-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .dtc-search-input {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+    .dtc-search-input:focus {
+      border-color: var(--accent);
+    }
+    .dtc-tab-filter {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .dtc-filter-btn {
+      flex: 1;
+      padding: 8px 4px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .dtc-filter-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .dtc-lib-results {
+      max-height: 380px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 2px;
+    }
+    .dtc-lib-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 10px 12px;
+      transition: background 0.15s;
+    }
+    .dtc-lib-item:hover {
+      background: rgba(255,255,255,0.06);
+    }
+    .dtc-badge-engine {
+      background: #ff5252;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 5px;
+      display: inline-block;
+    }
+    .dtc-badge-trans {
+      background: #ff9100;
+      color: #000;
+      font-weight: 800;
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 5px;
+      display: inline-block;
+    }
+
     .btn-action {
       width: 100%;
       padding: 12px;
@@ -1404,6 +1494,26 @@
     <div id="dtcList" class="dtc-list">
       <div style="text-align:center; padding: 20px; color: var(--text-dim); font-size: 0.85rem;">
         Presiona "Escanear Códigos" para consultar la memoria de la ECU.
+      </div>
+    </div>
+
+    <!-- Biblioteca de Códigos Honda PGM-FI y A/T -->
+    <div class="dtc-lib-card">
+      <div class="dtc-lib-header" onclick="toggleDtcLib()">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.15rem;">📖</span>
+          <span style="font-weight:700; font-size:0.95rem; color:#fff;">Guía de Códigos Honda (MIL & D4)</span>
+        </div>
+        <span id="dtcLibToggleIcon" style="color:var(--text-dim); font-size:0.85rem;">▼</span>
+      </div>
+      <div id="dtcLibBody" style="display:none; margin-top:12px;">
+        <input type="text" id="dtcSearchInput" class="dtc-search-input" placeholder="🔍 Buscar (ej. 63, P0137, O2, D4, solenoide...)" oninput="filterDtcLib()">
+        <div class="dtc-tab-filter">
+          <button id="btnFilterAll" class="dtc-filter-btn active" onclick="setDtcFilter('all')">Todos (<span id="countAll">0</span>)</button>
+          <button id="btnFilterEngine" class="dtc-filter-btn" onclick="setDtcFilter('engine')">Motor MIL (<span id="countEngine">0</span>)</button>
+          <button id="btnFilterTrans" class="dtc-filter-btn" onclick="setDtcFilter('trans')">Caja D4 (<span id="countTrans">0</span>)</button>
+        </div>
+        <div id="dtcLibResults" class="dtc-lib-results"></div>
       </div>
     </div>
 
@@ -2291,6 +2401,135 @@
     }
 
     // =========================================================================
+    // BIBLIOTECA DE CÓDIGOS HONDA (OBD-II, MIL Y TRANSMISIÓN D4)
+    // =========================================================================
+    const HONDA_CODES_DB = [
+      // Motor (PGM-FI - Parpadeos MIL)
+      { type: 'engine', code: '1', obd: 'P0131 / P0132', name: 'Sensor O2 Primario (S1)', desc: 'Voltaje anormalmente bajo o alto en sensor de oxígeno primario antes del catalizador.' },
+      { type: 'engine', code: '3', obd: 'P0107 / P0108', name: 'Sensor MAP (Presión Múltiple)', desc: 'Entrada de voltaje bajo (cortocircuito) o alto (circuito abierto) en sensor MAP.' },
+      { type: 'engine', code: '4', obd: 'P0335 / P0336', name: 'Sensor CKP (Posición Cigüeñal)', desc: 'Falla de circuito o señal fuera de rango del sensor de cigüeñal (distribuidor).' },
+      { type: 'engine', code: '5', obd: 'P0106 / P1128 / P1129', name: 'Sensor MAP (Rango / Fuga Vacío)', desc: 'Lectura de vacío anormal por fuga de aire o sensor MAP descalibrado.' },
+      { type: 'engine', code: '6', obd: 'P0117 / P0118', name: 'Sensor ECT (Temp. Refrigerante)', desc: 'Voltaje bajo o alto en sensor de temperatura de motor (bajo el distribuidor).' },
+      { type: 'engine', code: '7', obd: 'P0122 / P0123 / P1121 / P1122', name: 'Sensor TPS (Posición Mariposa)', desc: 'Falla de potenciómetro o voltaje fuera de rango en mariposa de aceleración.' },
+      { type: 'engine', code: '8', obd: 'P1359 / P1361 / P1362', name: 'Sensor TDC (Punto Muerto Superior)', desc: 'Falla o interrupción de señal en el sensor TDC dentro del distribuidor.' },
+      { type: 'engine', code: '9', obd: 'P1381 / P1382', name: 'Sensor CYP (Posición Cilindro 1)', desc: 'Interrupción o ausencia de pulsos de sincronización de cilindro 1.' },
+      { type: 'engine', code: '10', obd: 'P0111 / P0112 / P0113', name: 'Sensor IAT (Temp. Aire Admisión)', desc: 'Voltaje anormal en termistor de temperatura de aire en múltiple/ducto.' },
+      { type: 'engine', code: '12', obd: 'P1491 / P1498', name: 'Válvula EGR / Sensor Elevación', desc: 'Elevación insuficiente o voltaje alto en sensor de elevación de válvula EGR.' },
+      { type: 'engine', code: '13', obd: 'P1106 / P1107 / P1108', name: 'Sensor BARO (Presión Barométrica)', desc: 'Falla en el sensor barométrico interno integrado en la placa de la ECU.' },
+      { type: 'engine', code: '14', obd: 'P0505 / P1508 / P1509', name: 'Válvula IACV (Marcha Mínima)', desc: 'Falla en el control electrónico o atasco mecánico de la válvula de ralentí.' },
+      { type: 'engine', code: '16', obd: 'P0201 - P0204', name: 'Inyectores de Combustible', desc: 'Falla o circuito abierto en el arnés de inyectores de gasolina.' },
+      { type: 'engine', code: '17', obd: 'P0500 / P0501', name: 'Sensor VSS (Velocímetro)', desc: 'Pérdida de señal de velocidad del vehículo en la transmisión.' },
+      { type: 'engine', code: '20', obd: 'P1297 / P1298', name: 'Detector ELD (Carga Eléctrica)', desc: 'Voltaje bajo o alto en detector ELD en la fusiblera principal del vano motor.' },
+      { type: 'engine', code: '21', obd: 'P1259', name: 'Solenoide VTEC (Bobina)', desc: 'Falla de circuito o solenoide electrohidráulico de accionamiento VTEC.' },
+      { type: 'engine', code: '22', obd: 'P1259', name: 'Switch de Presión VTEC (VTPS)', desc: 'Falla en interruptor de presión de aceite del carrete VTEC.' },
+      { type: 'engine', code: '23', obd: 'P0325', name: 'Sensor Knock (Detonación KS)', desc: 'Falla de circuito o piezoeléctrico en sensor de cascabeleo (bloque motor trasero).' },
+      { type: 'engine', code: '30', obd: 'P1655', name: 'Línea TMA/TMB (Comunicación A/T)', desc: 'Falla en línea de enlace de datos entre ECU motor y control de transmisión.' },
+      { type: 'engine', code: '41', obd: 'P0135 / P1166 / P1167', name: 'Calentador O2 Primario (Heater S1)', desc: 'Resistencia calefactora quemada o circuito abierto en sensor de O2 primario.' },
+      { type: 'engine', code: '43', obd: 'Sistema Combustible', name: 'Suministro / Presión de Gasolina', desc: 'Problema en regulación de presión o entrega de combustible.' },
+      { type: 'engine', code: '45', obd: 'P0171 / P0172', name: 'Fuel Trim (Mezcla Pobre / Rica)', desc: 'La ECU agotó el límite de compensación de combustible (SFT/LFT).' },
+      { type: 'engine', code: '48', obd: 'P1162 / P1168 / P1169', name: 'Sensor O2 Línea LABEL', desc: 'Falla de circuito en sensor de mezcla pobre primario.' },
+      { type: 'engine', code: '54', obd: 'P1336 / P1337', name: 'Sensor CKF (Fluctuación Cigüeñal)', desc: 'Falla o sin señal en sensor CKF ubicado detrás de la polea del cigüeñal.' },
+      { type: 'engine', code: '61', obd: 'P0133 / P1163 - P1165', name: 'Sensor O2 Primario (Lento / Rango)', desc: 'Tiempo de conmutación muy lento entre rico y pobre en sensor primario.' },
+      { type: 'engine', code: '63', obd: 'P0137 / P0138 / P0139', name: 'Sensor O2 Secundario (S2)', desc: 'Voltaje anormal (bajo/alto) o respuesta lenta en sensor 2 post-catalizador.' },
+      { type: 'engine', code: '65', obd: 'P0141', name: 'Calentador O2 Secundario (Heater S2)', desc: 'Resistencia calefactora quemada en sensor de O2 post-catalizador.' },
+      { type: 'engine', code: '67', obd: 'P0420', name: 'Catalizador (Baja Eficiencia)', desc: 'Eficiencia del convertidor catalítico por debajo del umbral mínimo permitido.' },
+      { type: 'engine', code: '70', obd: 'P0700 / P1300 / P0300', name: 'Transmisión A/T / Misfire Múltiple', desc: 'Falla general en caja automática o fallo de encendido aleatorio en cilindros.' },
+      { type: 'engine', code: '71', obd: 'P0301', name: 'Misfire Cilindro 1', desc: 'Pérdida de combustión / fallo de encendido detectado en el cilindro 1.' },
+      { type: 'engine', code: '72', obd: 'P0302', name: 'Misfire Cilindro 2', desc: 'Pérdida de combustión / fallo de encendido detectado en el cilindro 2.' },
+      { type: 'engine', code: '73', obd: 'P0303', name: 'Misfire Cilindro 3', desc: 'Pérdida de combustión / fallo de encendido detectado en el cilindro 3.' },
+      { type: 'engine', code: '74', obd: 'P0304', name: 'Misfire Cilindro 4', desc: 'Pérdida de combustión / fallo de encendido detectado en el cilindro 4.' },
+      { type: 'engine', code: '80', obd: 'P0401', name: 'Flujo Insuficiente EGR', desc: 'Canales de recirculación de gases de escape parcialmente obstruidos con carbón.' },
+      { type: 'engine', code: '86', obd: 'P0116', name: 'Sensor ECT (Rango / Desviación)', desc: 'La curva de calentamiento de refrigerante no coincide con el tiempo esperado.' },
+      { type: 'engine', code: '90', obd: 'P1456 / P1457', name: 'Fuga Sistema EVAP', desc: 'Fuga detectada de vapores de gasolina en tanque o cánister de carbón activado.' },
+      { type: 'engine', code: '91', obd: 'P0451 / P0452 / P0453', name: 'Presión Tanque Gasolina', desc: 'Falla en el sensor de presión de vapor montado en el tanque de combustible.' },
+      { type: 'engine', code: '92', obd: 'P0441', name: 'Purga Sistema EVAP', desc: 'Flujo insuficiente a través de la válvula solenoide de purga del cánister.' },
+
+      // Transmisión Automática (Parpadeos en indicador [D4])
+      { type: 'trans', code: 'D4-1', obd: 'P1753', name: 'Solenoide A Bloqueo (Lock-up A)', desc: 'Falla en circuito de solenoide de bloqueo del convertidor de par A.' },
+      { type: 'trans', code: 'D4-2', obd: 'P1758', name: 'Solenoide B Bloqueo (Lock-up B)', desc: 'Falla en circuito de solenoide de bloqueo del convertidor de par B.' },
+      { type: 'trans', code: 'D4-5', obd: 'P1705', name: 'Switch Posición Velocidad (Corto)', desc: 'Cortocircuito a tierra en interruptor de posición de palanca selectora A/T.' },
+      { type: 'trans', code: 'D4-6', obd: 'P1706', name: 'Switch Posición Velocidad (Abierto)', desc: 'Circuito abierto en interruptor de posición de palanca selectora A/T.' },
+      { type: 'trans', code: 'D4-7', obd: 'P0753', name: 'Solenoide A de Cambio (Shift A)', desc: 'Falla en bobina o circuito del solenoide A de cambio de marcha.' },
+      { type: 'trans', code: 'D4-8', obd: 'P0758', name: 'Solenoide B de Cambio (Shift B)', desc: 'Falla en bobina o circuito del solenoide B de cambio de marcha.' },
+      { type: 'trans', code: 'D4-9', obd: 'P0720 / P0120', name: 'Sensor Velocidad Contraeje', desc: 'Pérdida de señal de velocidad del contraeje (Countershaft) de transmisión.' },
+      { type: 'trans', code: 'D4-15', obd: 'P0715', name: 'Sensor Velocidad Eje Principal', desc: 'Pérdida de señal de velocidad del eje principal (Mainshaft) de transmisión.' },
+      { type: 'trans', code: 'D4-16', obd: 'P1768', name: 'Solenoide Lineal de Presión', desc: 'Falla en solenoide lineal de embragues de transmisión automática.' },
+      { type: 'trans', code: 'D4-40', obd: 'P0740', name: 'Control Convertidor de Par', desc: 'Falla mecánica o hidráulica en acoplamiento del convertidor de par.' },
+      { type: 'trans', code: 'D4-41', obd: 'P0730', name: 'Control de Cambios / Relación', desc: 'Patinamiento o discrepancia de relación de giros entre marchas.' }
+    ];
+
+    let currentDtcFilter = 'all';
+
+    function toggleDtcLib() {
+      const body = document.getElementById('dtcLibBody');
+      const icon = document.getElementById('dtcLibToggleIcon');
+      if (body.style.display === 'none') {
+        body.style.display = 'block';
+        icon.textContent = '▲';
+        filterDtcLib();
+      } else {
+        body.style.display = 'none';
+        icon.textContent = '▼';
+      }
+    }
+
+    function setDtcFilter(filter) {
+      currentDtcFilter = filter;
+      document.querySelectorAll('.dtc-filter-btn').forEach(b => b.classList.remove('active'));
+      if (filter === 'all') document.getElementById('btnFilterAll').classList.add('active');
+      else if (filter === 'engine') document.getElementById('btnFilterEngine').classList.add('active');
+      else if (filter === 'trans') document.getElementById('btnFilterTrans').classList.add('active');
+      filterDtcLib();
+    }
+
+    function filterDtcLib() {
+      const q = (document.getElementById('dtcSearchInput').value || '').toLowerCase().trim();
+      const container = document.getElementById('dtcLibResults');
+      
+      const filtered = HONDA_CODES_DB.filter(item => {
+        if (currentDtcFilter !== 'all' && item.type !== currentDtcFilter) return false;
+        if (!q) return true;
+        return item.code.toLowerCase().includes(q) ||
+               item.obd.toLowerCase().includes(q) ||
+               item.name.toLowerCase().includes(q) ||
+               item.desc.toLowerCase().includes(q);
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:16px; color:var(--text-dim); font-size:0.8rem;">No se encontraron códigos coincidentes.</div>';
+        return;
+      }
+
+      let html = '';
+      filtered.forEach(item => {
+        const badgeClass = item.type === 'engine' ? 'dtc-badge-engine' : 'dtc-badge-trans';
+        const label = item.type === 'engine' ? `MIL #${item.code}` : `${item.code}`;
+        html += `
+          <div class="dtc-lib-item">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span class="${badgeClass}">${label}</span>
+              <span style="font-size:0.75rem; color:var(--accent); font-weight:700;">${item.obd}</span>
+            </div>
+            <div style="font-weight:700; color:#fff; font-size:0.88rem;">${item.name}</div>
+            <div style="font-size:0.75rem; color:var(--text-dim); margin-top:3px; line-height:1.3;">${item.desc}</div>
+          </div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function initDtcLib() {
+      const countAll = HONDA_CODES_DB.length;
+      const countEngine = HONDA_CODES_DB.filter(x => x.type === 'engine').length;
+      const countTrans = HONDA_CODES_DB.filter(x => x.type === 'trans').length;
+      const elAll = document.getElementById('countAll');
+      const elEng = document.getElementById('countEngine');
+      const elTr = document.getElementById('countTrans');
+      if (elAll) elAll.textContent = countAll;
+      if (elEng) elEng.textContent = countEngine;
+      if (elTr) elTr.textContent = countTrans;
+    }
+
+    // =========================================================================
     // NAVIGATION TABS
     // =========================================================================
     function setClusterMode(mode) {
@@ -2368,6 +2607,7 @@
     // Iniciar con el clúster S2000 por defecto
     window.addEventListener('DOMContentLoaded', () => {
       setClusterMode('s2k');
+      initDtcLib();
     });
 
   </script>
