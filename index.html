@@ -1288,7 +1288,7 @@
           <span id="valBatt" class="sensor-val">0.0</span>
           <span class="sensor-unit">V</span>
         </div>
-        <div style="font-size: 0.72rem; color: var(--text-dim); margin-top: 4px;" id="valEld">ELD: 0.0 A</div>
+        <div style="font-size: 0.72rem; color: var(--text-dim); margin-top: 4px;" id="valEld">ELD: 0.0 A | ALT: 0%</div>
       </div>
     </div>
 
@@ -1413,6 +1413,7 @@
       <div style="font-size:0.8rem; line-height: 1.6;" id="diagStatsText">
         Tramas Enviadas: 0 | Válidas: 0 | CRC Error: 0 | Timeouts: 0
       </div>
+      <div id="diagRawHex"></div>
       <button class="btn-action" style="margin-top: 10px;" onclick="sendBleCmd('ECHO')">
         Probar Eco del Transceptor L9637D
       </button>
@@ -1641,19 +1642,14 @@
     // =========================================================================
     // TELEMETRY PACKET PARSER (28-BYTE BINARY OR JSON)
     // =========================================================================
+    let bleTextBuffer = '';
+    const textDecoder = new TextDecoder('utf-8');
+
     function handleBleNotification(event) {
       const value = event.target.value;
       if (!value || value.byteLength === 0) return;
 
       const firstByte = value.getUint8(0);
-
-      // Si empieza con '{', es un mensaje JSON de diagnóstico/DTC
-      if (firstByte === 0x7B) {
-        const decoder = new TextDecoder('utf-8');
-        const jsonStr = decoder.decode(value);
-        handleJsonMessage(jsonStr);
-        return;
-      }
 
       // Trama Binaria de 28 bytes: Header 0xA5 0x5A 0x1C
       if (firstByte === 0xA5 && value.byteLength >= 28) {
@@ -1710,6 +1706,26 @@
         updateUiDashboard(currentData);
         processDatalogger(currentData);
         processAccelerationRun(currentData);
+        return;
+      }
+
+      // Reensamblaje de fragmentos de texto / JSON (delimitado por \n o llaves completas)
+      try {
+        bleTextBuffer += textDecoder.decode(value);
+        while (bleTextBuffer.includes('\n')) {
+          const idx = bleTextBuffer.indexOf('\n');
+          const line = bleTextBuffer.substring(0, idx).trim();
+          bleTextBuffer = bleTextBuffer.substring(idx + 1);
+          if (line.length > 0 && line.startsWith('{') && line.endsWith('}')) {
+            handleJsonMessage(line);
+          }
+        }
+        if (bleTextBuffer.trim().startsWith('{') && bleTextBuffer.trim().endsWith('}')) {
+          handleJsonMessage(bleTextBuffer.trim());
+          bleTextBuffer = '';
+        }
+      } catch (err) {
+        console.error('Error procesando texto BLE:', err);
       }
     }
 
@@ -1724,6 +1740,54 @@
         } else if (msg.type === 'diag') {
           document.getElementById('diagStatsText').textContent =
             `Comandos OK: ${msg.cmdOk} | Errores CRC: ${msg.cmdCrcFail} | Timeouts: ${msg.cmdTimeout} | Bytes RX: ${msg.rxBytes} | Eco OK: ${msg.echoOk}`;
+
+          const rawContainer = document.getElementById('diagRawHex');
+          if (rawContainer && (msg.row0 || msg.row1 || msg.d8 !== undefined)) {
+            const d8 = (msg.d8 !== undefined) ? msg.d8 : 0;
+            const d10 = (msg.d10 !== undefined) ? msg.d10 : 0;
+            const rawEld = (msg.rawEld !== undefined) ? msg.rawEld : 0;
+            const eldVolt = (rawEld / 51.0).toFixed(2);
+            const eldState = rawEld >= 250 ? '5.00V (Sin sensor ELD en caja fusibles / Circuito abierto)' : `${((245 - rawEld) * 0.35).toFixed(1)} A estimado`;
+
+            const bitBadge = (name, val, activeColor = '#00e676') => `
+              <div style="display:inline-flex; flex-direction:column; align-items:center; margin: 3px; padding: 5px 7px; background: ${val ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.35)'}; border-radius: 6px; border: 1px solid ${val ? activeColor : 'rgba(255,255,255,0.1)'}; min-width: 52px;">
+                <span style="font-size: 0.65rem; color: var(--text-dim);">${name}</span>
+                <span style="font-size: 0.85rem; font-weight: bold; color: ${val ? activeColor : '#666'};">${val ? '1' : '0'}</span>
+              </div>
+            `;
+
+            rawContainer.innerHTML = `
+              <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div style="font-size: 0.75rem; font-weight: bold; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                  Interruptores de Transmisión y Freno (Byte 0x08: 0x${d8.toString(16).toUpperCase().padStart(2, '0')})
+                </div>
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; margin-bottom: 10px;">
+                  ${bitBadge('B7 (VTEC SW)', !!(d8 & 0x80), '#00e676')}
+                  ${bitBadge('B6 (IGN/ECU)', !!(d8 & 0x40), '#ffb300')}
+                  ${bitBadge('B5 (ATP N)', !!(d8 & 0x20), '#00e5ff')}
+                  ${bitBadge('B4 (ATP P)', !!(d8 & 0x10), '#00e5ff')}
+                  ${bitBadge('B3 (FRENO)', !!(d8 & 0x08), '#ff1744')}
+                  ${bitBadge('B2 (A/C SW)', !!(d8 & 0x04), '#00e5ff')}
+                  ${bitBadge('B1 (A/C RLY)', !!(d8 & 0x02), '#00e5ff')}
+                  ${bitBadge('B0 (Starter)', !!(d8 & 0x01), '#ff9100')}
+                </div>
+
+                <div style="font-size: 0.75rem; font-weight: bold; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                  Detector Carga Eléctrica (ELD) y Alternador
+                </div>
+                <div style="font-size: 0.8rem; background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 6px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.06); line-height: 1.5;">
+                  <div>Byte ELD ADC: <strong style="color:var(--text);">${rawEld}</strong> (0x${rawEld.toString(16).toUpperCase().padStart(2, '0')}) | <strong>${eldVolt} V</strong></div>
+                  <div style="color: var(--text-dim); font-size: 0.75rem;">Diagnóstico: <span style="color: ${rawEld >= 250 ? 'var(--amber)' : 'var(--vtec)'}; font-weight: bold;">${eldState}</span></div>
+                  <div style="color: var(--text-dim); font-size: 0.75rem;">Carga Alternador ALT FR: <strong style="color: var(--text);">${currentData ? currentData.altFr : 0}%</strong></div>
+                </div>
+
+                <div style="font-size: 0.72rem; color: var(--text-dim); font-family: monospace; line-height: 1.5; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px; word-break: break-all;">
+                  <div><strong style="color:var(--primary);">Fila 0x00:</strong> ${msg.row0 || 'N/A'}</div>
+                  <div style="margin-top: 4px;"><strong style="color:var(--primary);">Fila 0x10:</strong> ${msg.row1 || 'N/A'}</div>
+                </div>
+              </div>
+            `;
+          }
         } else if (msg.type === 'echo') {
           alert(`Prueba de Eco de Hardware L9637D:\nEnviados: ${msg.sent}\nRecibidos: ${msg.rx}\nResultado OK: ${msg.ok}`);
         } else if (msg.type === 'ecuType') {
@@ -1931,7 +1995,7 @@
       setTxt('valMapInHg', d.mapInHg.toFixed(1) + ' inHg Vac');
 
       setTxt('valBatt', d.batt.toFixed(1));
-      setTxt('valEld', `ELD: ${d.eld.toFixed(1)} A`);
+      setTxt('valEld', `ELD: ${d.eld.toFixed(1)} A | ALT: ${d.altFr}%`);
 
       setTxt('valInj', d.inj.toFixed(2));
       setTxt('valIgn', d.ign.toFixed(1));
@@ -2256,6 +2320,22 @@
       }
     }
 
+    let diagPollInterval = null;
+    function startDiagPolling() {
+      if (diagPollInterval) clearInterval(diagPollInterval);
+      sendBleCmd('GET_DIAG');
+      diagPollInterval = setInterval(() => {
+        if (bleConnected) sendBleCmd('GET_DIAG');
+      }, 1000);
+    }
+
+    function stopDiagPolling() {
+      if (diagPollInterval) {
+        clearInterval(diagPollInterval);
+        diagPollInterval = null;
+      }
+    }
+
     function switchTab(tabId, el) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -2264,9 +2344,12 @@
       el.classList.add('active');
 
       if (tabId === 'tabLogger') {
+        stopDiagPolling();
         setTimeout(drawChart, 50);
       } else if (tabId === 'tabDiag') {
-        sendBleCmd('GET_DIAG');
+        startDiagPolling();
+      } else {
+        stopDiagPolling();
       }
     }
 
