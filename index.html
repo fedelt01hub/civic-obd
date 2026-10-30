@@ -200,66 +200,7 @@
     .tab-content.active {
       display: block;
     }
-
-
-
-    .s2k-cluster-card {
-      cursor: pointer;
-      position: relative;
-      transition: transform 0.15s ease;
-    }
-    .s2k-cluster-card:active {
-      transform: scale(0.99);
-    }
-    .s2k-fs-badge {
-      position: absolute;
-      top: 14px;
-      right: 18px;
-      font-size: 0.65rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: rgba(255, 255, 255, 0.45);
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      padding: 4px 10px;
-      border-radius: 8px;
-      pointer-events: auto;
-      text-transform: uppercase;
-      z-index: 10;
-      transition: all 0.2s ease;
-    }
-    .s2k-cluster-card.is-fullscreen {
-      position: fixed !important;
-      inset: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      z-index: 99999 !important;
-      background: #000 !important;
-      border-radius: 0 !important;
-      border: none !important;
-      margin: 0 !important;
-      padding: 10px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: center !important;
-      align-items: center !important;
-      box-shadow: none !important;
-    }
-    .s2k-cluster-card.is-fullscreen .s2k-cluster-svg {
-      width: 100% !important;
-      max-width: 100vw !important;
-      max-height: 98vh !important;
-      height: auto !important;
-    }
-    .s2k-cluster-card.is-fullscreen .s2k-fs-badge {
-      top: 20px;
-      right: 24px;
-      background: rgba(255, 45, 85, 0.3);
-      border-color: rgba(255, 45, 85, 0.6);
-      color: #fff;
-    }
-
-    /* Status dot indicators without emojis */
+    /* Status dot indicators */
     .status-dot-circle {
       width: 8px;
       height: 8px;
@@ -293,210 +234,219 @@
     }
 
     /* =========================================================================
-     * S2000 DIGITAL CLUSTER STYLES
+     * TRIPLE CLUSTER POD STYLES (RPM - KM/H CENTRO - TEMP)
      * ========================================================================= */
-    .s2k-cluster-card {
-      background: #0d0f14;
-      border: 2px solid #1e2430;
-      border-radius: 28px;
-      padding: 16px 12px;
-      position: relative;
-      margin-bottom: 14px;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), inset 0 0 40px rgba(0, 0, 0, 0.8);
-      overflow: hidden;
-    }
-    .s2k-cluster-svg {
-      width: 100%;
-      height: auto;
-      display: block;
-      margin: 0 auto;
-      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
-    }
-
-    /* RPM Segments */
-    .s2k-rpm-seg.amber {
-      fill: rgba(255, 106, 0, 0.12);
-      stroke: rgba(255, 106, 0, 0.25);
-      stroke-width: 0.5px;
-      transition: fill 0.04s, stroke 0.04s;
-    }
-    .s2k-rpm-seg.amber.active {
-      fill: #ff6a00 !important;
-      stroke: #ffa040 !important;
-      stroke-width: 0.8px;
-      filter: drop-shadow(0 0 6px rgba(255, 106, 0, 0.85));
-    }
-    .s2k-rpm-seg.redline {
-      fill: rgba(255, 23, 68, 0.15);
-      stroke: rgba(255, 23, 68, 0.3);
-      stroke-width: 0.5px;
-      transition: fill 0.04s, stroke 0.04s;
-    }
-    .s2k-rpm-seg.redline.active {
-      fill: #ff1744 !important;
-      stroke: #ff5252 !important;
-      stroke-width: 0.8px;
-      filter: drop-shadow(0 0 9px rgba(255, 23, 68, 0.95));
-    }
-
-    /* Aux Arc Segments (Temp & Fuel/Batt) */
-    .s2k-warn-seg.amber {
-      fill: rgba(255, 106, 0, 0.15);
-      stroke: rgba(255, 106, 0, 0.3);
-      stroke-width: 0.5px;
-    }
-    .s2k-warn-seg.amber.active {
-      fill: #ff6a00 !important;
-      stroke: #ffa040 !important;
-      filter: drop-shadow(0 0 5px rgba(255, 106, 0, 0.8));
-    }
-    .s2k-warn-seg.redline {
-      fill: rgba(255, 23, 68, 0.15);
-      stroke: rgba(255, 23, 68, 0.3);
-      stroke-width: 0.5px;
-    }
-    .s2k-warn-seg.redline.active {
-      fill: #ff1744 !important;
-      stroke: #ff5252 !important;
-      filter: drop-shadow(0 0 7px rgba(255, 23, 68, 0.9));
-    }
-
-    /* VTEC Pulse Animation on Cluster */
-    .s2k-vtec-glow {
-      animation: s2kVtecAnim 0.4s infinite alternate;
-    }
-    @keyframes s2kVtecAnim {
-      from { filter: drop-shadow(0 0 6px #00e676); }
-      to { filter: drop-shadow(0 0 16px #00e676); }
-    }
-
-    /* Cluster Mode Switcher */
-    .gauge-mode-bar {
+    .triple-cluster {
       display: flex;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 4px;
-      margin-bottom: 12px;
-      gap: 4px;
-    }
-    .gauge-mode-btn {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: var(--text-dim);
-      font-size: 0.74rem;
-      font-weight: 700;
-      padding: 8px 4px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .gauge-mode-btn.active {
-      background: var(--card-bg);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-
-    /* Cluster Grid */
-    .cluster-grid {
-      display: grid;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-    .cluster-grid.mode-dual {
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 600px) {
-      .cluster-grid.mode-dual {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-    .cluster-grid.mode-rpm #cardVss {
-      display: none !important;
-    }
-    .cluster-grid.mode-vss #cardRpm {
-      display: none !important;
-    }
-
-    .gauge-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 14px 12px 16px 12px;
-      text-align: center;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin: 8px 0 14px 0;
+      padding: 12px 6px;
+      background: radial-gradient(circle at 50% 50%, #151d2b 0%, #0a0e17 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 26px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       position: relative;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-      transition: transform 0.2s ease;
     }
-    .gauge-header {
+
+    .pod-side {
+      flex: 1;
+      max-width: 145px;
+      min-width: 95px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .pod-center {
+      flex: 1.4;
+      max-width: 215px;
+      min-width: 135px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .pod-header {
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 2px 10px 4px 10px;
+      padding: 0 6px 2px 6px;
     }
-    .gauge-title {
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      color: var(--text-dim);
-    }
-    .gauge-mini-badge {
+
+    .pod-title {
       font-size: 0.68rem;
       font-weight: 800;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .pod-title-center {
+      font-size: 0.72rem;
+      font-weight: 900;
+      color: #00f0ff;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+    }
+
+    .pod-mini-badge {
+      font-size: 0.62rem;
+      font-weight: 800;
       background: rgba(255, 255, 255, 0.06);
-      padding: 3px 8px;
-      border-radius: 8px;
+      padding: 2px 6px;
+      border-radius: 6px;
       color: var(--text-dim);
       border: 1px solid transparent;
       transition: all 0.2s ease;
     }
-    .gauge-mini-badge.active-vtec {
+
+    .pod-mini-badge.active-vtec {
       background: rgba(0, 230, 118, 0.2);
       border-color: var(--vtec);
       color: #fff;
       box-shadow: 0 0 10px var(--vtec-glow);
     }
-    .gauge-mini-badge.active-gear {
-      background: rgba(0, 229, 255, 0.15);
-      border-color: rgba(0, 229, 255, 0.4);
+
+    .pod-badge-gear {
+      font-size: 0.65rem;
+      font-weight: 900;
       color: #fff;
+      background: rgba(255, 45, 85, 0.2);
+      border: 1px solid rgba(255, 45, 85, 0.5);
+      padding: 2px 7px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
     }
 
-    .gauge-svg-wrap {
-      width: 100%;
-      max-width: 310px;
-      margin: 0 auto;
+    .pod-svg-wrap {
       position: relative;
-    }
-    .gauge-svg {
       width: 100%;
-      height: auto;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pod-svg {
+      width: 100%;
+      height: 100%;
       display: block;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
     }
-    .gauge-inner-info {
+
+    .pod-center .pod-svg-wrap {
+      transform: scale(1.06);
+    }
+
+    .pod-inner-info {
       position: absolute;
-      top: 53%;
+      top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -46%);
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
       width: 100%;
     }
-    .gauge-val-big {
-      font-size: 3.3rem;
-      font-weight: 900;
-      letter-spacing: -1.5px;
-      line-height: 1;
-      color: #fff;
-      font-variant-numeric: tabular-nums;
-    }
-    .gauge-unit-lbl {
-      font-size: 0.76rem;
-      color: var(--text-dim);
+
+    .pod-val-side {
+      font-family: 'Chakra Petch', monospace;
+      font-size: clamp(1.3rem, 4.4vw, 1.85rem);
       font-weight: 800;
-      letter-spacing: 2px;
-      margin-top: 4px;
+      color: #fff;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .pod-val-center {
+      font-family: 'Chakra Petch', monospace;
+      font-size: clamp(2.3rem, 7.8vw, 3.4rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 0.95;
+      letter-spacing: -1px;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 16px rgba(0, 240, 255, 0.45);
+    }
+
+    .pod-unit-lbl {
+      font-size: clamp(0.55rem, 1.8vw, 0.68rem);
+      font-weight: 800;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+      margin-top: 3px;
+      text-transform: uppercase;
+    }
+
+    /* Warning Indicators Bar */
+    .warning-indicators-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      padding: 0 6px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .warn-badge {
+      padding: 5px 9px;
+      border-radius: 8px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.28);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .warn-badge.active-cel {
+      background: rgba(255, 179, 0, 0.2);
+      border-color: #ffb300;
+      color: #ffb300;
+      box-shadow: 0 0 12px rgba(255, 179, 0, 0.45);
+    }
+
+    .warn-badge.active-vtec {
+      background: rgba(0, 230, 118, 0.2);
+      border-color: #00e676;
+      color: #00e676;
+      box-shadow: 0 0 12px rgba(0, 230, 118, 0.4);
+      animation: pulseVtec 0.8s infinite alternate;
+    }
+
+    .warn-badge.active-brake {
+      background: rgba(255, 23, 68, 0.2);
+      border-color: #ff1744;
+      color: #ff1744;
+      box-shadow: 0 0 12px rgba(255, 23, 68, 0.4);
+    }
+
+    .warn-badge.active-ac {
+      background: rgba(0, 229, 255, 0.2);
+      border-color: #00e5ff;
+      color: #00e5ff;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+    }
+
+    .warn-badge.active-pn {
+      background: rgba(255, 179, 0, 0.15);
+      border-color: #ffb300;
+      color: #ffb300;
     }
 
     /* Sensor Grid */
@@ -931,393 +881,231 @@
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Header: Solo Civic '99 y Conectar Bluetooth -->
   <header>
     <div class="brand">
       <img src="icon.svg" class="brand-logo" alt="Civic OBD">
       <div>
-        <div class="brand-title">CIVIC '99 <span class="brand-badge">BLE 5.0</span></div>
+        <div class="brand-title">CIVIC '99 <span class="brand-badge">OBD2</span></div>
       </div>
     </div>
     <button id="btnConnect" class="btn-connect" onclick="toggleBleConnection()">
       <span id="bleIcon" class="status-dot-circle"></span>
-      <span id="bleStatusText">Conectar BLE</span>
+      <span id="bleStatusText">Conectar Bluetooth</span>
     </button>
   </header>
 
-  <!-- PWA Install Banner -->
-  <div id="installBanner" class="install-banner">
-    <span>Instala la App en la pantalla de inicio</span>
-    <button id="btnInstall">Instalar</button>
-  </div>
-
-  <!-- Status Bar (Pills) -->
-  <div class="status-bar">
-    <div id="pillVtec" class="pill">VTEC</div>
-    <div id="pillAc" class="pill">A/C CLUTCH</div>
-    <div id="pillGear" class="pill">GEAR: N</div>
-    <div id="pillPn" class="pill">P / N</div>
-    <div id="pillBrake" class="pill">FRENO</div>
-    <div id="pillLink" class="pill">ECU: --</div>
-  </div>
-
   <!-- TAB 1: DASHBOARD -->
   <main id="tabDashboard" class="tab-content active">
-    <!-- Selector de Modo de Relojes -->
-    <div class="gauge-mode-bar">
-      <button id="btnModeS2k" class="gauge-mode-btn active" onclick="setClusterMode('s2k')">S2000 DIGITAL</button>
-      <button id="btnModeDual" class="gauge-mode-btn" onclick="setClusterMode('dual')">RELOJES GEMELOS</button>
-    </div>
 
-    <!-- CLÚSTER HONDA S2000 (AP1/AP2) -->
-    <div id="cardS2k" class="s2k-cluster-card" onclick="toggleS2kFullscreen()">
-      <div class="s2k-fs-badge">PANTALLA COMPLETA</div>
-      <svg class="s2k-cluster-svg" viewBox="0 0 720 290">
-        <defs>
-          <filter id="s2kRedGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="4" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        <!-- Fondo del Clúster / Bezel -->
-        <rect x="5" y="5" width="710" height="280" rx="30" fill="#080a0f" stroke="#1c2430" stroke-width="2.5"/>
-        <path d="M 20 25 Q 360 -5 700 25 L 705 255 Q 360 275 15 255 Z" fill="#040608" opacity="0.6"/>
-
-        <!-- Línea guía / fondo del tacómetro -->
-        <path d="M 80 225 A 220 180 0 0 1 496 158" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="28" stroke-linecap="round"/>
-
-        <!-- Segmentos del Tacómetro S2000 (46 segmentos de 0 a 9000 RPM) -->
-        <g id="s2kRpmGroup">
-          <polygon id="s2k_rpm_0" points="92.6,228.4 93.0,222.0 69.1,220.3 68.6,226.6" class="s2k-rpm-seg amber" data-rpm="0"/>
-            <polygon id="s2k_rpm_1" points="93.8,218.6 94.6,212.3 70.8,209.5 70.0,215.8" class="s2k-rpm-seg amber" data-rpm="200"/>
-            <polygon id="s2k_rpm_2" points="95.8,209.0 96.8,202.7 73.2,198.7 72.1,205.0" class="s2k-rpm-seg amber" data-rpm="400"/>
-            <polygon id="s2k_rpm_3" points="98.4,199.5 99.8,193.2 76.3,188.1 75.0,194.4" class="s2k-rpm-seg amber" data-rpm="600"/>
-            <polygon id="s2k_rpm_4" points="101.7,190.1 103.4,183.9 80.2,177.7 78.5,183.9" class="s2k-rpm-seg amber" data-rpm="800"/>
-            <polygon id="s2k_rpm_5" points="105.7,180.9 107.6,174.8 84.8,167.5 82.8,173.6" class="s2k-rpm-seg amber" data-rpm="1000"/>
-            <polygon id="s2k_rpm_6" points="110.3,171.9 112.5,165.9 90.1,157.5 87.8,163.5" class="s2k-rpm-seg amber" data-rpm="1200"/>
-            <polygon id="s2k_rpm_7" points="115.5,163.2 118.1,157.3 96.1,147.7 93.5,153.6" class="s2k-rpm-seg amber" data-rpm="1400"/>
-            <polygon id="s2k_rpm_8" points="121.4,154.7 124.2,148.9 102.7,138.2 99.9,144.0" class="s2k-rpm-seg amber" data-rpm="1600"/>
-            <polygon id="s2k_rpm_9" points="127.8,146.5 130.9,140.9 110.0,129.1 106.9,134.7" class="s2k-rpm-seg amber" data-rpm="1800"/>
-            <polygon id="s2k_rpm_10" points="134.8,138.6 138.2,133.2 118.0,120.3 114.5,125.7" class="s2k-rpm-seg amber" data-rpm="2000"/>
-            <polygon id="s2k_rpm_11" points="142.3,131.1 146.0,125.9 126.5,111.9 122.8,117.1" class="s2k-rpm-seg amber" data-rpm="2200"/>
-            <polygon id="s2k_rpm_12" points="150.3,123.9 154.4,118.9 135.6,103.9 131.6,108.9" class="s2k-rpm-seg amber" data-rpm="2400"/>
-            <polygon id="s2k_rpm_13" points="158.9,117.2 163.2,112.4 145.3,96.3 141.0,101.1" class="s2k-rpm-seg amber" data-rpm="2600"/>
-            <polygon id="s2k_rpm_14" points="167.8,110.8 172.4,106.3 155.5,89.2 151.0,93.7" class="s2k-rpm-seg amber" data-rpm="2800"/>
-            <polygon id="s2k_rpm_15" points="177.2,104.9 182.0,100.7 166.2,82.6 161.4,86.9" class="s2k-rpm-seg amber" data-rpm="3000"/>
-            <polygon id="s2k_rpm_16" points="187.0,99.4 192.1,95.5 177.4,76.5 172.3,80.5" class="s2k-rpm-seg amber" data-rpm="3200"/>
-            <polygon id="s2k_rpm_17" points="197.1,94.4 202.4,90.8 188.9,71.0 183.6,74.6" class="s2k-rpm-seg amber" data-rpm="3400"/>
-            <polygon id="s2k_rpm_18" points="207.6,89.9 213.1,86.6 200.9,66.0 195.4,69.2" class="s2k-rpm-seg amber" data-rpm="3600"/>
-            <polygon id="s2k_rpm_19" points="218.3,85.9 224.0,83.0 213.2,61.6 207.5,64.5" class="s2k-rpm-seg amber" data-rpm="3800"/>
-            <polygon id="s2k_rpm_20" points="229.3,82.3 235.2,79.8 225.8,57.7 219.9,60.3" class="s2k-rpm-seg amber" data-rpm="4000"/>
-            <polygon id="s2k_rpm_21" points="240.5,79.3 246.6,77.2 238.7,54.5 232.6,56.6" class="s2k-rpm-seg amber" data-rpm="4200"/>
-            <polygon id="s2k_rpm_22" points="251.9,76.8 258.1,75.1 251.8,51.9 245.6,53.6" class="s2k-rpm-seg amber" data-rpm="4400"/>
-            <polygon id="s2k_rpm_23" points="263.5,74.8 269.7,73.5 265.0,50.0 258.7,51.3" class="s2k-rpm-seg amber" data-rpm="4600"/>
-            <polygon id="s2k_rpm_24" points="275.1,73.3 281.5,72.5 278.4,48.7 272.0,49.5" class="s2k-rpm-seg amber" data-rpm="4800"/>
-            <polygon id="s2k_rpm_25" points="286.9,72.4 293.2,72.0 291.8,48.0 285.4,48.4" class="s2k-rpm-seg amber" data-rpm="5000"/>
-            <polygon id="s2k_rpm_26" points="298.6,72.0 305.0,72.0 305.3,48.0 298.9,48.0" class="s2k-rpm-seg amber" data-rpm="5200"/>
-            <polygon id="s2k_rpm_27" points="310.4,72.1 316.8,72.6 318.7,48.7 312.4,48.2" class="s2k-rpm-seg amber" data-rpm="5400"/>
-            <polygon id="s2k_rpm_28" points="322.2,72.8 328.5,73.7 332.1,50.0 325.8,49.0" class="s2k-rpm-seg amber" data-rpm="5600"/>
-            <polygon id="s2k_rpm_29" points="333.9,74.0 340.1,75.4 345.4,51.9 339.1,50.5" class="s2k-rpm-seg amber" data-rpm="5800"/>
-            <polygon id="s2k_rpm_30" points="345.5,75.7 351.6,77.5 358.5,54.5 352.3,52.7" class="s2k-rpm-seg amber" data-rpm="6000"/>
-            <polygon id="s2k_rpm_31" points="357.0,78.0 363.0,80.2 371.3,57.7 365.4,55.5" class="s2k-rpm-seg amber" data-rpm="6200"/>
-            <polygon id="s2k_rpm_32" points="368.3,80.7 374.1,83.4 384.0,61.5 378.1,58.9" class="s2k-rpm-seg amber" data-rpm="6400"/>
-            <polygon id="s2k_rpm_33" points="379.4,84.1 385.0,87.1 396.3,65.9 390.7,62.9" class="s2k-rpm-seg amber" data-rpm="6600"/>
-            <polygon id="s2k_rpm_34" points="390.2,87.9 395.7,91.3 408.3,70.8 402.9,67.5" class="s2k-rpm-seg redline" data-rpm="6800"/>
-            <polygon id="s2k_rpm_35" points="400.8,92.2 406.0,95.9 419.9,76.4 414.7,72.6" class="s2k-rpm-seg redline" data-rpm="7000"/>
-            <polygon id="s2k_rpm_36" points="411.1,97.1 416.1,101.1 431.1,82.4 426.1,78.4" class="s2k-rpm-seg redline" data-rpm="7200"/>
-            <polygon id="s2k_rpm_37" points="421.0,102.4 425.7,106.7 441.9,88.9 437.2,84.6" class="s2k-rpm-seg redline" data-rpm="7400"/>
-            <polygon id="s2k_rpm_38" points="430.5,108.2 435.0,112.7 452.2,96.0 447.7,91.4" class="s2k-rpm-seg redline" data-rpm="7600"/>
-            <polygon id="s2k_rpm_39" points="439.6,114.4 443.8,119.2 461.9,103.5 457.7,98.6" class="s2k-rpm-seg redline" data-rpm="7800"/>
-            <polygon id="s2k_rpm_40" points="448.3,121.0 452.2,126.1 471.2,111.4 467.3,106.3" class="s2k-rpm-seg redline" data-rpm="8000"/>
-            <polygon id="s2k_rpm_41" points="456.5,128.1 460.1,133.4 479.8,119.7 476.2,114.5" class="s2k-rpm-seg redline" data-rpm="8200"/>
-            <polygon id="s2k_rpm_42" points="464.1,135.6 467.5,141.0 487.9,128.5 484.6,123.0" class="s2k-rpm-seg redline" data-rpm="8400"/>
-            <polygon id="s2k_rpm_43" points="471.2,143.4 474.3,149.0 495.4,137.5 492.3,131.9" class="s2k-rpm-seg redline" data-rpm="8600"/>
-            <polygon id="s2k_rpm_44" points="477.8,151.5 480.5,157.3 502.2,146.9 499.4,141.2" class="s2k-rpm-seg redline" data-rpm="8800"/>
-            <polygon id="s2k_rpm_45" points="483.7,159.9 486.2,165.9 508.3,156.6 505.9,150.7" class="s2k-rpm-seg redline" data-rpm="9000"/>
-        </g>
-
-        <!-- Marcas radiales (Ticks) -->
-        <g>
-          <line x1="96.8" y1="225.7" x2="92.8" y2="225.4" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"/>
-            <line x1="110.1" y1="180.0" x2="106.4" y2="178.6" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"/>
-            <line x1="139.0" y1="139.3" x2="135.8" y2="136.8" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"/>
-            <line x1="181.1" y1="106.8" x2="178.7" y2="103.5" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"/>
-            <line x1="232.8" y1="85.1" x2="231.5" y2="81.4" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"/>
-            <line x1="290.1" y1="76.2" x2="289.9" y2="72.2" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"/>
-            <line x1="348.2" y1="80.6" x2="349.1" y2="76.8" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"/>
-            <line x1="402.3" y1="98.1" x2="404.3" y2="94.7" stroke="#ff2d55" stroke-width="2" stroke-linecap="round"/>
-            <line x1="448.1" y1="127.2" x2="451.0" y2="124.5" stroke="#ff2d55" stroke-width="2" stroke-linecap="round"/>
-            <line x1="481.8" y1="165.5" x2="485.3" y2="163.7" stroke="#ff2d55" stroke-width="2" stroke-linecap="round"/>
-        </g>
-
-        <!-- Numeración de RPM (0 a 9) estrictamente dentro del arco -->
-        <g id="s2kNumGroup">
-          <text x="108.7" y="226.8" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">0</text>
-            <text x="121.3" y="184.4" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">1</text>
-            <text x="148.5" y="146.7" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">2</text>
-            <text x="188.1" y="116.5" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">3</text>
-            <text x="236.8" y="96.5" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">4</text>
-            <text x="290.7" y="88.2" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">5</text>
-            <text x="345.4" y="92.3" fill="#e0e6ed" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">6</text>
-            <text x="396.3" y="108.5" fill="#ff2d55" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">7</text>
-            <text x="439.4" y="135.5" fill="#ff2d55" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">8</text>
-            <text x="471.1" y="171.0" fill="#ff2d55" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">9</text>
-          <text x="105" y="246" fill="#8b9bb4" font-size="10" font-weight="700" letter-spacing="1">x1000r/min</text>
-        </g>
-
-        <!-- VELOCÍMETRO DIGITAL CENTRAL (debajo de la cúpula) -->
-        <g transform="translate(0, 0)">
-          <!-- Dígito de Velocidad S2000 -->
-          <text id="s2kValVss" x="310" y="160" font-family="'Chakra Petch', 'Orbitron', monospace" font-style="italic" font-weight="900" font-size="80" fill="#ff3333" text-anchor="middle" letter-spacing="-2" filter="url(#s2kRedGlow)">0</text>
-          <text x="378" y="158" font-family="'Chakra Petch', sans-serif" font-weight="800" font-size="14" fill="#8b9bb4">km/h</text>
-        </g>
-
-        <!-- RELOJ 1: TEMPERATURA REFRIGERANTE (ECT °C) -->
-        <g id="s2kTempGroup">
-          <text x="555" y="110" fill="#8b9bb4" font-size="12" font-weight="800">C</text>
-          <!-- Icono Termómetro y etiqueta -->
-          <path d="M 613 100 L 613 92 A 3 3 0 0 1 617 92 L 617 100 A 5 5 0 1 1 613 100 Z" fill="#8b9bb4"/>
-          <text x="615" y="118" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle">TEMP</text>
-          <text x="672" y="110" fill="#ff2d55" font-size="12" font-weight="800">H</text>
-          <polygon id="s2k_temp_0" points="581.0,105.0 569.0,105.0 570.7,92.7 582.2,95.9" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_1" points="582.7,94.5 571.3,90.8 576.6,79.6 586.6,86.2" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_2" points="587.5,85.0 577.8,78.0 586.4,69.0 593.8,78.4" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_3" points="595.0,77.5 588.0,67.8 598.9,61.9 603.1,73.2" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_4" points="604.5,72.7 600.8,61.3 613.0,59.0 613.5,71.0" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_5" points="615.0,71.0 615.0,59.0 627.3,60.7 624.1,72.2" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_6" points="625.5,72.7 629.2,61.3 640.4,66.6 633.8,76.6" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_7" points="635.0,77.5 642.0,67.8 651.0,76.4 641.6,83.8" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_temp_8" points="642.5,85.0 652.2,78.0 658.1,88.9 646.8,93.1" class="s2k-warn-seg redline"/>
-            <polygon id="s2k_temp_9" points="647.3,94.5 658.7,90.8 661.0,103.0 649.0,103.5" class="s2k-warn-seg redline"/>
-        </g>
-
-        <!-- RELOJ 2: ACELERADOR EN VIVO (TPS %) [Reemplaza la gasolina que no se sensa] -->
-        <g id="s2kTpsGroup">
-          <text x="555" y="200" fill="#8b9bb4" font-size="11" font-weight="800">0%</text>
-          <!-- Etiqueta TPS Acelerador -->
-          <text x="615" y="194" fill="#00e676" font-size="10" font-weight="800" text-anchor="middle">TPS</text>
-          <text id="s2kTpsValText" x="615" y="208" fill="#e0e6ed" font-size="10" font-weight="700" text-anchor="middle">0%</text>
-          <text x="672" y="200" fill="#ff2d55" font-size="11" font-weight="800">100%</text>
-          <polygon id="s2k_tps_0" points="581.0,195.0 569.0,195.0 570.7,182.7 582.2,185.9" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_tps_1" points="582.7,184.5 571.3,180.8 576.6,169.6 586.6,176.2" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_tps_2" points="587.5,175.0 577.8,168.0 586.4,159.0 593.8,168.4" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_tps_3" points="595.0,167.5 588.0,157.8 598.9,151.9 603.1,163.2" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_tps_4" points="604.5,162.7 600.8,151.3 613.0,149.0 613.5,161.0" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_tps_5" points="615.0,161.0 615.0,149.0 627.3,150.7 624.1,162.2" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_tps_6" points="625.5,162.7 629.2,151.3 640.4,156.6 633.8,166.6" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_tps_7" points="635.0,167.5 642.0,157.8 651.0,166.4 641.6,173.8" class="s2k-warn-seg amber"/>
-            <polygon id="s2k_tps_8" points="642.5,175.0 652.2,168.0 658.1,178.9 646.8,183.1" class="s2k-warn-seg redline"/>
-            <polygon id="s2k_tps_9" points="647.3,184.5 658.7,180.8 661.0,193.0 649.0,193.5" class="s2k-warn-seg redline"/>
-        </g>
-
-        <!-- PANTALLA LCD INFERIOR (ODÓMETRO / GEAR / VACÍO) -->
-        <g transform="translate(200, 178)">
-          <rect x="0" y="0" width="220" height="40" rx="8" fill="#14080a" stroke="rgba(255,51,51,0.25)" stroke-width="1.5"/>
-          <!-- Hora y Marcha -->
-          <text id="s2kClock" x="14" y="17" fill="#ff4d4d" font-family="'Chakra Petch', monospace" font-size="12" font-weight="700">12:00</text>
-          <text id="s2kGear" x="110" y="17" fill="#ff4d4d" font-family="'Chakra Petch', monospace" font-size="13" font-weight="800" text-anchor="middle">GEAR: N</text>
-          <text id="s2kVtecBadge" x="206" y="17" fill="rgba(255,255,255,0.2)" font-family="'Chakra Petch', monospace" font-size="11" font-weight="800" text-anchor="end">VTEC</text>
-          
-          <!-- Lectura MAP e inHg -->
-          <text id="s2kOdo" x="14" y="32" fill="#ff7373" font-family="'Chakra Petch', monospace" font-size="11" font-weight="700">MAP 0 kPa</text>
-          <text id="s2kVac" x="206" y="32" fill="#ff7373" font-family="'Chakra Petch', monospace" font-size="11" font-weight="700" text-anchor="end">0.0 inHg Vac</text>
-        </g>
-
-        <!-- BANDEJA INFERIOR DE TESTIGOS (WARNING LIGHTS) -->
-        <g transform="translate(45, 236)">
-          <rect x="0" y="0" width="630" height="34" rx="8" fill="#0d1117" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-          
-          <!-- TESTIGO FRENO -->
-          <text id="s2kWarnBrake" x="55" y="22" fill="rgba(255,23,68,0.2)" font-size="12" font-weight="900" font-family="sans-serif" text-anchor="middle">BRAKE</text>
-
-          <!-- TESTIGO BATERÍA -->
-          <g id="s2kWarnBatt" opacity="0.3" transform="translate(135, 10)">
-            <rect x="0" y="3" width="16" height="10" rx="1.5" fill="none" stroke="#ff1744" stroke-width="1.8"/>
-            <rect x="4" y="0" width="3" height="3" fill="#ff1744"/>
-            <rect x="9" y="0" width="3" height="3" fill="#ff1744"/>
-            <text x="3" y="11" fill="#ff1744" font-size="8" font-weight="800">-</text>
-            <text x="9" y="11" fill="#ff1744" font-size="8" font-weight="800">+</text>
-          </g>
-
-          <!-- TESTIGO CHECK ENGINE (CEL) -->
-          <g id="s2kWarnCel" opacity="0.3" transform="translate(225, 9)">
-            <path d="M 2 7 L 6 3 L 14 3 L 18 7 L 18 13 L 2 13 Z M 20 6 L 22 6 L 22 10 L 20 10 Z M 0 6 L 2 6 L 2 10 L 0 10 Z" fill="none" stroke="#ffb300" stroke-width="1.8"/>
-          </g>
-
-          <!-- TESTIGO VTEC -->
-          <text id="s2kWarnVtec" x="345" y="22" fill="rgba(0,230,118,0.2)" font-size="12" font-weight="900" font-family="sans-serif" text-anchor="middle">VTEC</text>
-
-          <!-- TESTIGO A/C CLUTCH -->
-          <text id="s2kWarnAc" x="460" y="22" fill="rgba(0,229,255,0.2)" font-size="12" font-weight="900" font-family="sans-serif" text-anchor="middle">A/C CLUTCH</text>
-
-          <!-- TESTIGO P / N -->
-          <text id="s2kWarnPn" x="570" y="22" fill="rgba(255,179,0,0.2)" font-size="12" font-weight="900" font-family="sans-serif" text-anchor="middle">P / N</text>
-        </g>
-      </svg>
-    </div>
-
-    <!-- Contenedor del Cluster (Ambos o Individual) -->
-    <div id="clusterContainer" class="cluster-grid mode-dual">
-      <!-- RELOJ 1: TACÓMETRO -->
-      <div id="cardRpm" class="gauge-card">
-        <div class="gauge-header">
-          <span class="gauge-title">TACÓMETRO</span>
-          <span id="badgeVtecMini" class="gauge-mini-badge">VTEC</span>
+    <!-- Triple Cluster: Tacómetro (Izq), Velocímetro Grande (Centro), Temperatura (Der) -->
+    <div class="triple-cluster">
+      
+      <!-- RELOJ IZQUIERDO: TACÓMETRO RPM -->
+      <div class="pod-side pod-rpm">
+        <div class="pod-header">
+          <span class="pod-title">RPM</span>
+          <span id="badgeVtecMini" class="pod-mini-badge">VTEC</span>
         </div>
-        <div class="gauge-svg-wrap">
-          <svg class="gauge-svg" viewBox="0 0 280 240">
-          <defs>
-            <linearGradient id="rpmGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#38ef7d"/>
-              <stop offset="65%" stop-color="#ffb300"/>
-              <stop offset="85%" stop-color="#ff2d55"/>
-            </linearGradient>
-            <filter id="rpmGlow">
-              <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-          </defs>
+        <div class="pod-svg-wrap">
+          <svg class="pod-svg" viewBox="0 0 200 200">
+            <defs>
+              <linearGradient id="rpmGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00e676"/>
+                <stop offset="65%" stop-color="#ffb300"/>
+                <stop offset="85%" stop-color="#ff2d55"/>
+              </linearGradient>
+              <filter id="rpmGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
 
-          <!-- Fondo del Arco (260 deg de barrido) -->
-          <path d="M 69.52 189.14 A 92 92 0 1 1 210.48 189.14" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="12" stroke-linecap="round"/>
-          
-          <!-- Zona de Advertencia / Redline -->
-          <path d="M 231.99 131.61 A 92 92 0 0 1 210.48 189.14" fill="none" stroke="rgba(255,45,85,0.35)" stroke-width="12" stroke-linecap="round"/>
+            <!-- Fondo del Arco (260 deg, R=72) -->
+            <path d="M 44.85 146.28 A 72 72 0 1 1 155.15 146.28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10" stroke-linecap="round"/>
+            
+            <!-- Redline Zone (6800 a 8000 RPM) -->
+            <path d="M 172 101.3 A 72 72 0 0 1 155.15 146.28" fill="none" stroke="rgba(255,45,85,0.35)" stroke-width="10" stroke-linecap="round"/>
 
-          <!-- Arco Activo Dinamico -->
-          <path id="gaugeProgress" d="M 69.52 189.14 A 92 92 0 1 1 210.48 189.14" fill="none" stroke="url(#rpmGradient)" stroke-width="12" stroke-linecap="round"
-                stroke-dasharray="417.5" stroke-dashoffset="417.5" filter="url(#rpmGlow)" style="transition: stroke-dashoffset 0.08s linear;"/>
+            <!-- Arco Dinámico RPM -->
+            <path id="gaugeProgress" d="M 44.85 146.28 A 72 72 0 1 1 155.15 146.28" fill="none" stroke="url(#rpmGrad)" stroke-width="10" stroke-linecap="round"
+                  stroke-dasharray="326.7" stroke-dashoffset="326.7" filter="url(#rpmGlow)" style="transition: stroke-dashoffset 0.08s linear;"/>
 
-          <!-- Marcas Radiales (Ticks) -->
-          <g>
-            <line x1="75.7" y1="184.0" x2="66.5" y2="191.7" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="60.4" y1="165.0" x2="53.0" y2="168.3" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="56.7" y1="141.0" x2="44.8" y2="142.5" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="54.0" y1="116.8" x2="46.1" y2="115.5" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="63.9" y1="94.5" x2="53.0" y2="89.4" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="74.6" y1="72.6" x2="68.6" y2="67.4" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="94.9" y1="59.2" x2="88.4" y2="49.0" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="115.7" y1="46.5" x2="113.4" y2="38.8" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="140.0" y1="46.0" x2="140.0" y2="34.0" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="164.3" y1="46.5" x2="166.6" y2="38.8" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="185.1" y1="59.2" x2="191.6" y2="49.0" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="205.4" y1="72.6" x2="211.4" y2="67.4" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="216.1" y1="94.5" x2="227.0" y2="89.4" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="226.0" y1="116.8" x2="233.9" y2="115.5" stroke="#ff2d55" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="223.3" y1="141.0" x2="235.2" y2="142.5" stroke="#ff2d55" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="219.6" y1="165.0" x2="227.0" y2="168.3" stroke="#ff2d55" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="204.3" y1="184.0" x2="213.5" y2="191.7" stroke="#ff2d55" stroke-width="2.5" stroke-linecap="round"/>
-          </g>
+            <!-- Marcas Radiales Ticks -->
+            <g stroke-linecap="round">
+              <line x1="54.0" y1="138.6" x2="47.9" y2="143.7" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+              <line x1="40.5" y1="107.8" x2="32.6" y2="108.9" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+              <line x1="45.6" y1="74.6" x2="38.4" y2="71.3" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+              <line x1="67.8" y1="49.4" x2="63.5" y2="42.6" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+              <line x1="100.0" y1="40.0" x2="100.0" y2="32.0" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+              <line x1="132.2" y1="49.4" x2="136.5" y2="42.6" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+              <line x1="154.4" y1="74.6" x2="161.6" y2="71.3" stroke="#ff2d55" stroke-width="1.8"/>
+              <line x1="159.5" y1="107.8" x2="167.4" y2="108.9" stroke="#ff2d55" stroke-width="2.2"/>
+              <line x1="146.0" y1="138.6" x2="152.1" y2="143.7" stroke="#ff2d55" stroke-width="2.2"/>
+            </g>
 
-          <!-- Numeracion Simetrica -->
-          <g>
-            <text x="84.8" y="176.3" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">0</text>
-            <text x="68.6" y="139.4" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">1</text>
-            <text x="74.7" y="99.6" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">2</text>
-            <text x="101.3" y="69.3" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">3</text>
-            <text x="140.0" y="58.0" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">4</text>
-            <text x="178.7" y="69.3" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">5</text>
-            <text x="205.3" y="99.6" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">6</text>
-            <text x="211.4" y="139.4" fill="#ff2d55" font-size="12" font-weight="800" text-anchor="middle" dominant-baseline="central">7</text>
-            <text x="195.2" y="176.3" fill="#ff2d55" font-size="12" font-weight="800" text-anchor="middle" dominant-baseline="central">8</text>
-          </g>
-        </svg>
-          <div class="gauge-inner-info">
-            <div id="valRpm" class="gauge-val-big">0</div>
-            <div class="gauge-unit-lbl">RPM x1000</div>
+            <!-- Números 0 a 8 -->
+            <g>
+              <text x="61.7" y="132.1" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">0</text>
+              <text x="50.4" y="106.5" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">1</text>
+              <text x="54.7" y="78.9" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">2</text>
+              <text x="73.1" y="57.8" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">3</text>
+              <text x="100.0" y="50.0" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">4</text>
+              <text x="126.9" y="57.8" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">5</text>
+              <text x="145.3" y="78.9" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">6</text>
+              <text x="149.6" y="106.5" fill="#ff2d55" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">7</text>
+              <text x="138.3" y="132.1" fill="#ff2d55" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">8</text>
+            </g>
+          </svg>
+          <div class="pod-inner-info">
+            <div id="valRpm" class="pod-val-side">0</div>
+            <div class="pod-unit-lbl">RPM</div>
           </div>
         </div>
       </div>
 
-      <!-- RELOJ 2: VELOCÍMETRO -->
-      <div id="cardVss" class="gauge-card">
-        <div class="gauge-header">
-          <span class="gauge-title">VELOCÍMETRO</span>
-          <span id="badgeGearMini" class="gauge-mini-badge">GEAR: N</span>
+      <!-- RELOJ CENTRAL: VELOCÍMETRO GRANDE (KM/H) -->
+      <div class="pod-center pod-vss">
+        <div class="pod-header">
+          <span class="pod-title-center">VELOCIDAD</span>
+          <span id="badgeGearMini" class="pod-badge-gear">GEAR: N</span>
         </div>
-        <div class="gauge-svg-wrap">
-          <svg class="gauge-svg" viewBox="0 0 280 240">
-          <defs>
-            <linearGradient id="vssGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#00e5ff"/>
-              <stop offset="65%" stop-color="#ffb300"/>
-              <stop offset="85%" stop-color="#ff2d55"/>
-            </linearGradient>
-            <filter id="vssGlow">
-              <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-          </defs>
+        <div class="pod-svg-wrap">
+          <svg class="pod-svg" viewBox="0 0 240 240">
+            <defs>
+              <linearGradient id="vssGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00f0ff"/>
+                <stop offset="65%" stop-color="#ffb300"/>
+                <stop offset="85%" stop-color="#ff2d55"/>
+              </linearGradient>
+              <filter id="vssGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
 
-          <!-- Fondo del Arco (260 deg de barrido) -->
-          <path d="M 69.52 189.14 A 92 92 0 1 1 210.48 189.14" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="12" stroke-linecap="round"/>
-          
-          <!-- Zona de Advertencia / Redline -->
-          <path d="M 218.93 82.74 A 92 92 0 0 1 210.48 189.14" fill="none" stroke="rgba(255,45,85,0.35)" stroke-width="12" stroke-linecap="round"/>
+            <!-- Fondo del Arco (260 deg, R=92) -->
+            <path d="M 49.52 179.14 A 92 92 0 1 1 190.48 179.14" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="13" stroke-linecap="round"/>
+            
+            <!-- Zona Alta Velocidad (160 a 220 km/h) -->
+            <path d="M 198.9 72.8 A 92 92 0 0 1 190.48 179.14" fill="none" stroke="rgba(255,45,85,0.35)" stroke-width="13" stroke-linecap="round"/>
 
-          <!-- Arco Activo Dinamico -->
-          <path id="gaugeVssProgress" d="M 69.52 189.14 A 92 92 0 1 1 210.48 189.14" fill="none" stroke="url(#vssGradient)" stroke-width="12" stroke-linecap="round"
-                stroke-dasharray="417.5" stroke-dashoffset="417.5" filter="url(#vssGlow)" style="transition: stroke-dashoffset 0.08s linear;"/>
+            <!-- Arco Dinámico KM/H -->
+            <path id="gaugeVssProgress" d="M 49.52 179.14 A 92 92 0 1 1 190.48 179.14" fill="none" stroke="url(#vssGrad)" stroke-width="13" stroke-linecap="round"
+                  stroke-dasharray="417.5" stroke-dashoffset="417.5" filter="url(#vssGlow)" style="transition: stroke-dashoffset 0.08s linear;"/>
 
-          <!-- Marcas Radiales (Ticks) -->
-          <g>
-            <line x1="75.7" y1="184.0" x2="66.5" y2="191.7" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="63.3" y1="171.1" x2="56.3" y2="174.9" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="59.4" y1="153.7" x2="47.9" y2="157.0" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="53.3" y1="136.9" x2="45.3" y2="137.5" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="56.7" y1="119.4" x2="44.8" y2="117.8" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="57.8" y1="101.5" x2="50.2" y2="98.9" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="67.9" y1="86.9" x2="57.6" y2="80.7" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="76.1" y1="71.0" x2="70.2" y2="65.5" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="91.3" y1="61.6" x2="84.3" y2="51.8" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="105.1" y1="50.3" x2="101.9" y2="43.0" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="122.8" y1="47.8" x2="120.3" y2="36.0" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="140.0" y1="43.0" x2="140.0" y2="35.0" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="157.2" y1="47.8" x2="159.7" y2="36.0" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="174.9" y1="50.3" x2="178.1" y2="43.0" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="188.7" y1="61.6" x2="195.7" y2="51.8" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round"/>
-            <line x1="203.9" y1="71.0" x2="209.8" y2="65.5" stroke="#ff2d55" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="212.1" y1="86.9" x2="222.4" y2="80.7" stroke="#ff2d55" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="222.2" y1="101.5" x2="229.8" y2="98.9" stroke="#ff2d55" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="223.3" y1="119.4" x2="235.2" y2="117.8" stroke="#ff2d55" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="226.7" y1="136.9" x2="234.7" y2="137.5" stroke="#ff2d55" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="220.6" y1="153.7" x2="232.1" y2="157.0" stroke="#ff2d55" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="216.7" y1="171.1" x2="223.7" y2="174.9" stroke="#ff2d55" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="204.3" y1="184.0" x2="213.5" y2="191.7" stroke="#ff2d55" stroke-width="2.5" stroke-linecap="round"/>
-          </g>
+            <!-- Marcas Radiales (0 a 220) -->
+            <g stroke-linecap="round">
+              <line x1="60.2" y1="170.1" x2="52.6" y2="176.6" stroke="rgba(255,255,255,0.45)" stroke-width="1.8"/>
+              <line x1="45.2" y1="142.0" x2="35.6" y2="144.8" stroke="rgba(255,255,255,0.3)" stroke-width="1.4"/>
+              <line x1="42.6" y1="110.1" x2="32.7" y2="108.9" stroke="rgba(255,255,255,0.45)" stroke-width="1.8"/>
+              <line x1="53.1" y1="79.9" x2="44.5" y2="74.8" stroke="rgba(255,255,255,0.3)" stroke-width="1.4"/>
+              <line x1="74.8" y1="56.5" x2="69.0" y2="48.3" stroke="rgba(255,255,255,0.45)" stroke-width="1.8"/>
+              <line x1="104.0" y1="43.7" x2="102.0" y2="33.9" stroke="rgba(255,255,255,0.3)" stroke-width="1.4"/>
+              <line x1="136.0" y1="43.7" x2="138.0" y2="33.9" stroke="rgba(255,255,255,0.45)" stroke-width="1.8"/>
+              <line x1="165.2" y1="56.5" x2="171.0" y2="48.3" stroke="rgba(255,255,255,0.3)" stroke-width="1.4"/>
+              <line x1="186.9" y1="79.9" x2="195.5" y2="74.8" stroke="#ff2d55" stroke-width="1.8"/>
+              <line x1="197.4" y1="110.1" x2="207.3" y2="108.9" stroke="#ff2d55" stroke-width="2.2"/>
+              <line x1="194.8" y1="142.0" x2="204.4" y2="144.8" stroke="#ff2d55" stroke-width="2.2"/>
+              <line x1="179.8" y1="170.1" x2="187.4" y2="176.6" stroke="#ff2d55" stroke-width="2.2"/>
+            </g>
 
-          <!-- Numeracion Simetrica -->
-          <g>
-            <text x="84.8" y="176.3" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">0</text>
-            <text x="70.9" y="150.3" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">20</text>
-            <text x="68.6" y="120.9" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">40</text>
-            <text x="78.2" y="93.0" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">60</text>
-            <text x="98.2" y="71.4" fill="#8b9bb4" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">80</text>
-            <text x="125.3" y="59.5" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">100</text>
-            <text x="154.7" y="59.5" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">120</text>
-            <text x="181.8" y="71.4" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">140</text>
-            <text x="201.8" y="93.0" fill="#ff2d55" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">160</text>
-            <text x="211.4" y="120.9" fill="#ff2d55" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">180</text>
-            <text x="209.1" y="150.3" fill="#ff2d55" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">200</text>
-            <text x="195.2" y="176.3" fill="#ff2d55" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">220</text>
-          </g>
-        </svg>
-          <div class="gauge-inner-info">
-            <div id="valVss" class="gauge-val-big">0</div>
-            <div class="gauge-unit-lbl">KM / H</div>
+            <!-- Números de Velocidad (0 a 220) -->
+            <g>
+              <text x="69.4" y="162.4" fill="#8b9bb4" font-size="11" font-weight="700" text-anchor="middle" dominant-baseline="central">0</text>
+              <text x="56.7" y="138.6" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">20</text>
+              <text x="54.5" y="111.6" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">40</text>
+              <text x="63.4" y="86.1" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">60</text>
+              <text x="81.7" y="66.2" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">80</text>
+              <text x="106.5" y="55.4" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">100</text>
+              <text x="133.5" y="55.4" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">120</text>
+              <text x="158.3" y="66.2" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">140</text>
+              <text x="176.6" y="86.1" fill="#ff2d55" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">160</text>
+              <text x="185.5" y="111.6" fill="#ff2d55" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">180</text>
+              <text x="183.3" y="138.6" fill="#ff2d55" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">200</text>
+              <text x="170.6" y="162.4" fill="#ff2d55" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">220</text>
+            </g>
+          </svg>
+          <div class="pod-inner-info">
+            <div id="valVss" class="pod-val-center">0</div>
+            <div class="pod-unit-lbl">KM / H</div>
           </div>
         </div>
       </div>
+
+      <!-- RELOJ DERECHO: TEMPERATURA REFRIGERANTE (ECT) -->
+      <div class="pod-side pod-temp">
+        <div class="pod-header">
+          <span class="pod-title">TEMP</span>
+          <span id="badgeTempStatus" class="pod-mini-badge">ECT</span>
+        </div>
+        <div class="pod-svg-wrap">
+          <svg class="pod-svg" viewBox="0 0 200 200">
+            <defs>
+              <linearGradient id="ectGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00b4d8"/>
+                <stop offset="45%" stop-color="#00e676"/>
+                <stop offset="75%" stop-color="#ffb300"/>
+                <stop offset="90%" stop-color="#ff2d55"/>
+              </linearGradient>
+              <filter id="ectGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- Fondo del Arco (260 deg, R=72) -->
+            <path d="M 44.85 146.28 A 72 72 0 1 1 155.15 146.28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10" stroke-linecap="round"/>
+            
+            <!-- Zona de Sobrecalentamiento (>102°C) -->
+            <path d="M 169.2 80.2 A 72 72 0 0 1 155.15 146.28" fill="none" stroke="rgba(255,45,85,0.35)" stroke-width="10" stroke-linecap="round"/>
+
+            <!-- Arco Dinámico ECT -->
+            <path id="gaugeEctProgress" d="M 44.85 146.28 A 72 72 0 1 1 155.15 146.28" fill="none" stroke="url(#ectGrad)" stroke-width="10" stroke-linecap="round"
+                  stroke-dasharray="326.7" stroke-dashoffset="326.7" filter="url(#ectGlow)" style="transition: stroke-dashoffset 0.08s linear;"/>
+
+            <!-- Marcas Radiales (C a H) -->
+            <g stroke-linecap="round">
+              <line x1="54.0" y1="138.6" x2="47.9" y2="143.7" stroke="#00b4d8" stroke-width="1.8"/>
+              <line x1="40.1" y1="96.5" x2="32.1" y2="96.0" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+              <line x1="58.8" y1="56.4" x2="53.3" y2="50.5" stroke="#00e676" stroke-width="1.8"/>
+              <line x1="100.0" y1="40.0" x2="100.0" y2="32.0" stroke="#00e676" stroke-width="2.2"/>
+              <line x1="141.2" y1="56.4" x2="146.7" y2="50.5" stroke="#ffb300" stroke-width="1.8"/>
+              <line x1="159.9" y1="96.5" x2="167.9" y2="96.0" stroke="#ff2d55" stroke-width="1.8"/>
+              <line x1="146.0" y1="138.6" x2="152.1" y2="143.7" stroke="#ff2d55" stroke-width="2.2"/>
+            </g>
+
+            <!-- Etiquetas de Temperatura -->
+            <g>
+              <text x="63.2" y="130.9" fill="#00b4d8" font-size="11" font-weight="800" text-anchor="middle" dominant-baseline="central">C</text>
+              <text x="56.5" y="79.7" fill="#8b9bb4" font-size="10" font-weight="700" text-anchor="middle" dominant-baseline="central">70</text>
+              <text x="100.0" y="52.0" fill="#00e676" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">90</text>
+              <text x="143.5" y="79.7" fill="#ffb300" font-size="10" font-weight="800" text-anchor="middle" dominant-baseline="central">110</text>
+              <text x="136.8" y="130.9" fill="#ff1744" font-size="11" font-weight="800" text-anchor="middle" dominant-baseline="central">H</text>
+            </g>
+          </svg>
+          <div class="pod-inner-info">
+            <div id="valEctGauge" class="pod-val-side">0</div>
+            <div class="pod-unit-lbl">°C ECT</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Tira de Testigos / Warning Lights (CEL, VTEC, FRENO, A/C, P/N, ECU) -->
+    <div class="warning-indicators-bar">
+      <div id="warnCelBadge" class="warn-badge">
+        <svg width="14" height="12" viewBox="0 0 22 14" fill="currentColor">
+          <path d="M 2 7 L 6 3 L 14 3 L 18 7 L 18 13 L 2 13 Z M 20 6 L 22 6 L 22 10 L 20 10 Z M 0 6 L 2 6 L 2 10 L 0 10 Z" fill="none" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        <span>CHECK</span>
+      </div>
+      <div id="warnVtecBadge" class="warn-badge">VTEC</div>
+      <div id="warnBrakeBadge" class="warn-badge">BRAKE</div>
+      <div id="warnAcBadge" class="warn-badge">A/C</div>
+      <div id="warnPnBadge" class="warn-badge">P/N</div>
+      <div id="pillLink" class="warn-badge" style="font-size: 0.65rem;">ECU: --</div>
     </div>
 
     <!-- Section A: Motor & Marchas -->
@@ -1928,24 +1716,16 @@
     // =========================================================================
     function updateUiDashboard(d) {
       try {
-      // Tacómetro RPM (0 a 8000 RPM)
+      // 1. Reloj Izquierdo: Tacómetro RPM (0 a 8000 RPM)
       const maxRpm = 8000;
       const rpmPct = Math.min(Math.max(d.rpm / maxRpm, 0), 1);
-      const arcLen = 417.5;
-      const rpmOffset = arcLen - (arcLen * rpmPct);
+      const rpmArcLen = 326.7;
+      const rpmOffset = rpmArcLen - (rpmArcLen * rpmPct);
       const rpmArc = document.getElementById('gaugeProgress');
       if (rpmArc) rpmArc.style.strokeDashoffset = rpmOffset;
-      document.getElementById('valRpm').textContent = d.rpm;
+      const valRpm = document.getElementById('valRpm');
+      if (valRpm) valRpm.textContent = d.rpm;
 
-      // Velocímetro VSS (0 a 220 KM/H)
-      const maxVss = 220;
-      const vssPct = Math.min(Math.max(d.vss / maxVss, 0), 1);
-      const vssOffset = arcLen - (arcLen * vssPct);
-      const vssArc = document.getElementById('gaugeVssProgress');
-      if (vssArc) vssArc.style.strokeDashoffset = vssOffset;
-      document.getElementById('valVss').textContent = d.vss;
-
-      // Badges dentro de los relojes
       const vtecBadge = document.getElementById('badgeVtecMini');
       if (vtecBadge) {
         if (d.vtec) {
@@ -1957,137 +1737,57 @@
         }
       }
 
+      // 2. Reloj Central: Velocímetro Grande (0 a 220 KM/H)
+      const maxVss = 220;
+      const vssPct = Math.min(Math.max(d.vss / maxVss, 0), 1);
+      const vssArcLen = 417.5;
+      const vssOffset = vssArcLen - (vssArcLen * vssPct);
+      const vssArc = document.getElementById('gaugeVssProgress');
+      if (vssArc) vssArc.style.strokeDashoffset = vssOffset;
+      const valVss = document.getElementById('valVss');
+      if (valVss) valVss.textContent = d.vss;
+
       const gearBadge = document.getElementById('badgeGearMini');
       if (gearBadge) {
-        
         gearBadge.textContent = `GEAR: ${GEAR_NAMES[d.gear] || 'N'}`;
         if (d.gear > 0) gearBadge.classList.add('active-gear');
         else gearBadge.classList.remove('active-gear');
       }
 
-      // =======================================================================
-      // ANIMACIÓN DEL CLÚSTER HONDA S2000
-      // =======================================================================
-      // 1. Tacómetro segmentado S2000 (0 a 9000 RPM, 46 segmentos)
-      const numS2kSegs = 46;
-      for (let i = 0; i < numS2kSegs; i++) {
-        const seg = document.getElementById(`s2k_rpm_${i}`);
-        if (!seg) continue;
-        const segRpm = parseInt(seg.getAttribute('data-rpm') || '0', 10);
-        if (d.rpm >= segRpm && d.rpm > 200) {
-          seg.classList.add('active');
+      // 3. Reloj Derecho: Temperatura Refrigerante ECT (0 a 130 °C)
+      const maxEct = 130;
+      const ectPct = Math.min(Math.max(d.ect / maxEct, 0), 1);
+      const ectArcLen = 326.7;
+      const ectOffset = ectArcLen - (ectArcLen * ectPct);
+      const ectArc = document.getElementById('gaugeEctProgress');
+      if (ectArc) ectArc.style.strokeDashoffset = ectOffset;
+      const valEctGauge = document.getElementById('valEctGauge');
+      if (valEctGauge) valEctGauge.textContent = d.ect;
+
+      const badgeTemp = document.getElementById('badgeTempStatus');
+      if (badgeTemp) {
+        if (d.ect >= 105) {
+          badgeTemp.textContent = 'CALIENTE';
+          badgeTemp.style.color = '#ff1744';
+          badgeTemp.style.borderColor = '#ff1744';
+        } else if (d.ect < 65) {
+          badgeTemp.textContent = 'FRÍO';
+          badgeTemp.style.color = '#00b4d8';
+          badgeTemp.style.borderColor = '#00b4d8';
         } else {
-          seg.classList.remove('active');
+          badgeTemp.textContent = 'ECT';
+          badgeTemp.style.color = '#00e676';
+          badgeTemp.style.borderColor = 'rgba(0, 230, 118, 0.4)';
         }
       }
 
-      // 2. Velocidad Central S2000
-      const s2kVssEl = document.getElementById('s2kValVss');
-      if (s2kVssEl) s2kVssEl.textContent = d.vss;
-
-      // 3. Reloj Temperatura Refrigerante S2000 (40°C a 115°C, 10 segmentos)
-      // ECT normal en Civic suele ser 85-92°C (aprox 5-6 barritas al centro)
-      const ectPct = Math.min(Math.max((d.ect - 40) / 75.0, 0), 1);
-      const activeTempBars = Math.round(ectPct * 10);
-      for (let i = 0; i < 10; i++) {
-        const tseg = document.getElementById(`s2k_temp_${i}`);
-        if (tseg) {
-          if (i < activeTempBars) tseg.classList.add('active');
-          else tseg.classList.remove('active');
-        }
-      }
-
-      // 4. Reloj TPS Acelerador S2000 (0% a 100%, 10 segmentos reactivos)
-      const tpsPct = Math.min(Math.max(d.tps / 100.0, 0), 1);
-      const activeTpsBars = Math.round(tpsPct * 10);
-      for (let i = 0; i < 10; i++) {
-        const bseg = document.getElementById(`s2k_tps_${i}`);
-        if (bseg) {
-          if (i < activeTpsBars) bseg.classList.add('active');
-          else bseg.classList.remove('active');
-        }
-      }
-      const tpsTxt = document.getElementById('s2kTpsValText');
-      if (tpsTxt) tpsTxt.textContent = `${d.tps}%`;
-
-      // 5. Pantallita LCD Inferior S2000
-      const s2kGearEl = document.getElementById('s2kGear');
-      if (s2kGearEl) s2kGearEl.textContent = `GEAR: ${GEAR_NAMES[d.gear] || 'N'}`;
-
-      const s2kVtecBadge = document.getElementById('s2kVtecBadge');
-      if (s2kVtecBadge) {
-        if (d.vtec) {
-          s2kVtecBadge.style.fill = '#00e676';
-          s2kVtecBadge.style.filter = 'drop-shadow(0 0 8px #00e676)';
-          s2kVtecBadge.classList.add('s2k-vtec-glow');
-          s2kVtecBadge.textContent = 'VTEC';
-        } else {
-          s2kVtecBadge.style.fill = 'rgba(255,255,255,0.2)';
-          s2kVtecBadge.style.filter = 'none';
-          s2kVtecBadge.classList.remove('s2k-vtec-glow');
-          s2kVtecBadge.textContent = 'VTEC';
-        }
-      }
-
-      const s2kOdoEl = document.getElementById('s2kOdo');
-      if (s2kOdoEl) s2kOdoEl.textContent = `MAP ${d.map} kPa`;
-      const s2kVacEl = document.getElementById('s2kVac');
-      if (s2kVacEl) s2kVacEl.textContent = `${d.mapInHg.toFixed(1)} inHg Vac`;
-
-      // Reloj de hora en vivo
-      const s2kClockEl = document.getElementById('s2kClock');
-      if (s2kClockEl) {
-        const nowTime = new Date();
-        const hh = String(nowTime.getHours()).padStart(2, '0');
-        const mm = String(nowTime.getMinutes()).padStart(2, '0');
-        s2kClockEl.textContent = `${hh}:${mm}`;
-      }
-
-      // 6. Testigos Inferiores S2000
-      const warnBrake = document.getElementById('s2kWarnBrake');
-      if (warnBrake) {
-        warnBrake.style.fill = d.brake ? '#ff1744' : 'rgba(255,23,68,0.2)';
-        warnBrake.style.filter = d.brake ? 'drop-shadow(0 0 8px #ff1744)' : 'none';
-      }
-
-      const warnCel = document.getElementById('s2kWarnCel');
-      if (warnCel) {
-        const isCelOn = d.mil || (d.dtcCount > 0);
-        warnCel.style.opacity = isCelOn ? '1' : '0.2';
-        warnCel.style.filter = isCelOn ? 'drop-shadow(0 0 8px #ffb300)' : 'none';
-      }
-
-      const warnVtec = document.getElementById('s2kWarnVtec');
-      if (warnVtec) {
-        warnVtec.style.fill = d.vtec ? '#00e676' : 'rgba(0,230,118,0.2)';
-        warnVtec.style.filter = d.vtec ? 'drop-shadow(0 0 8px #00e676)' : 'none';
-      }
-
-      const warnAc = document.getElementById('s2kWarnAc');
-      if (warnAc) {
-        warnAc.style.fill = d.ac ? '#00e5ff' : 'rgba(0,229,255,0.2)';
-        warnAc.style.filter = d.ac ? 'drop-shadow(0 0 8px #00e5ff)' : 'none';
-      }
-
-      const warnPn = document.getElementById('s2kWarnPn');
-      if (warnPn) {
-        warnPn.style.fill = d.pn ? '#ffb300' : 'rgba(255,179,0,0.2)';
-        warnPn.style.filter = d.pn ? 'drop-shadow(0 0 6px #ffb300)' : 'none';
-      }
-
-      const warnBatt = document.getElementById('s2kWarnBatt');
-      if (warnBatt) {
-        const battWarn = (d.batt > 0 && d.batt < 12.0);
-        warnBatt.style.opacity = battWarn ? '1' : '0.25';
-        warnBatt.style.filter = battWarn ? 'drop-shadow(0 0 8px #ff1744)' : 'none';
-      }
-
-
-      // Status Pills
-      togglePill('pillVtec', d.vtec, 'active-vtec');
-      togglePill('pillAc', d.ac, 'active-ac');
-      togglePill('pillBrake', d.brake, 'active-brake');
-      togglePill('pillPn', d.pn, 'active-pn');
+      // 4. Barra de Testigos / Warning Badges
+      const isCelOn = d.mil || (d.dtcCount > 0);
+      togglePill('warnCelBadge', isCelOn, 'active-cel');
+      togglePill('warnVtecBadge', d.vtec, 'active-vtec');
+      togglePill('warnBrakeBadge', d.brake, 'active-brake');
+      togglePill('warnAcBadge', d.ac, 'active-ac');
+      togglePill('warnPnBadge', d.pn, 'active-pn');
 
       const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
       const setWidth = (id, val) => { const el = document.getElementById(id); if (el) el.style.width = val; };
@@ -2579,45 +2279,6 @@
     // =========================================================================
     // NAVIGATION TABS
     // =========================================================================
-    function setClusterMode(mode) {
-      const grid = document.getElementById('clusterContainer');
-      const s2k = document.getElementById('cardS2k');
-      document.querySelectorAll('.gauge-mode-btn').forEach(b => b.classList.remove('active'));
-      
-      if (mode === 's2k') {
-        s2k.style.display = 'block';
-        grid.style.display = 'none';
-        document.getElementById('btnModeS2k').classList.add('active');
-      } else {
-        s2k.style.display = 'none';
-        grid.style.display = 'grid';
-        grid.className = 'cluster-grid mode-dual';
-        document.getElementById('btnModeDual').classList.add('active');
-      }
-    }
-
-    function toggleS2kFullscreen() {
-      const card = document.getElementById('cardS2k');
-      const badge = card.querySelector('.s2k-fs-badge');
-      const isFs = card.classList.toggle('is-fullscreen');
-      
-      if (isFs) {
-        if (badge) badge.textContent = 'SALIR [X]';
-        if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen().catch(() => {});
-        } else if (document.documentElement.webkitRequestFullscreen) {
-          document.documentElement.webkitRequestFullscreen();
-        }
-      } else {
-        if (badge) badge.textContent = 'PANTALLA COMPLETA';
-        if (document.exitFullscreen && document.fullscreenElement) {
-          document.exitFullscreen().catch(() => {});
-        } else if (document.webkitExitFullscreen && document.webkitFullscreenElement) {
-          document.webkitExitFullscreen();
-        }
-      }
-    }
-
     let diagPollInterval = null;
     function startDiagPolling() {
       if (diagPollInterval) clearInterval(diagPollInterval);
@@ -2651,9 +2312,7 @@
       }
     }
 
-    // Iniciar con el clúster S2000 por defecto
     window.addEventListener('DOMContentLoaded', () => {
-      setClusterMode('s2k');
       initDtcLib();
     });
 
