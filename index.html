@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Civic OBD - Escáner & Datalogger</title>
   
+  <!-- Cache Control (Evita que el navegador retenga versiones viejas al recargar) -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <!-- PWA Metadata -->
   <meta name="theme-color" content="#0a0d14">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1349,7 +1354,28 @@
     // SERVICE WORKER & PWA INSTALL
     // =========================================================================
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW reg fail', err));
+      navigator.serviceWorker.register('./sw.js').then((reg) => {
+        reg.update(); // Verifica activamente si hay una nueva versión en GitHub al cargar
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('Nueva versión lista, actualizando...');
+                window.location.reload();
+              }
+            });
+          }
+        });
+      }).catch(err => console.log('SW reg fail', err));
+
+      let isRefreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!isRefreshing) {
+          isRefreshing = true;
+          window.location.reload();
+        }
+      });
     }
 
     let deferredPrompt = null;
