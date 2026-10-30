@@ -240,89 +240,38 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      margin: 8px 0 14px 0;
-      padding: 12px 6px;
-      background: radial-gradient(circle at 50% 50%, #151d2b 0%, #0a0e17 100%);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 26px;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      gap: 8px;
+      margin: 4px auto 14px auto;
+      max-width: 650px;
+      padding: 16px 8px;
+      background: radial-gradient(ellipse at center, #162032 0%, #090d16 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 28px;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       position: relative;
     }
 
     .pod-side {
       flex: 1;
-      max-width: 145px;
-      min-width: 95px;
+      max-width: 170px;
+      min-width: 90px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       position: relative;
     }
 
     .pod-center {
-      flex: 1.4;
-      max-width: 215px;
-      min-width: 135px;
+      flex: 1.6;
+      max-width: 255px;
+      min-width: 145px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       position: relative;
       z-index: 2;
-    }
-
-    .pod-header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 6px 2px 6px;
-    }
-
-    .pod-title {
-      font-size: 0.68rem;
-      font-weight: 800;
-      color: var(--text-dim);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .pod-title-center {
-      font-size: 0.72rem;
-      font-weight: 900;
-      color: #00f0ff;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
-    }
-
-    .pod-mini-badge {
-      font-size: 0.62rem;
-      font-weight: 800;
-      background: rgba(255, 255, 255, 0.06);
-      padding: 2px 6px;
-      border-radius: 6px;
-      color: var(--text-dim);
-      border: 1px solid transparent;
-      transition: all 0.2s ease;
-    }
-
-    .pod-mini-badge.active-vtec {
-      background: rgba(0, 230, 118, 0.2);
-      border-color: var(--vtec);
-      color: #fff;
-      box-shadow: 0 0 10px var(--vtec-glow);
-    }
-
-    .pod-badge-gear {
-      font-size: 0.65rem;
-      font-weight: 900;
-      color: #fff;
-      background: rgba(255, 45, 85, 0.2);
-      border: 1px solid rgba(255, 45, 85, 0.5);
-      padding: 2px 7px;
-      border-radius: 6px;
-      letter-spacing: 0.5px;
     }
 
     .pod-svg-wrap {
@@ -338,11 +287,7 @@
       width: 100%;
       height: 100%;
       display: block;
-      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
-    }
-
-    .pod-center .pod-svg-wrap {
-      transform: scale(1.06);
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
     }
 
     .pod-inner-info {
@@ -354,36 +299,37 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       pointer-events: none;
       width: 100%;
     }
 
     .pod-val-side {
       font-family: 'Chakra Petch', monospace;
-      font-size: clamp(1.3rem, 4.4vw, 1.85rem);
+      font-size: clamp(1.4rem, 4.8vw, 2.1rem);
       font-weight: 800;
       color: #fff;
       line-height: 1;
       font-variant-numeric: tabular-nums;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
     }
 
     .pod-val-center {
       font-family: 'Chakra Petch', monospace;
-      font-size: clamp(2.3rem, 7.8vw, 3.4rem);
+      font-size: clamp(2.7rem, 9.5vw, 4.2rem);
       font-weight: 900;
       color: #fff;
-      line-height: 0.95;
+      line-height: 0.9;
       letter-spacing: -1px;
       font-variant-numeric: tabular-nums;
-      text-shadow: 0 0 16px rgba(0, 240, 255, 0.45);
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
     }
 
     .pod-unit-lbl {
-      font-size: clamp(0.55rem, 1.8vw, 0.68rem);
+      font-size: clamp(0.56rem, 1.8vw, 0.7rem);
       font-weight: 800;
       color: var(--text-dim);
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
       margin-top: 3px;
       text-transform: uppercase;
     }
@@ -393,18 +339,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 6px;
-      padding: 0 6px;
-      margin-bottom: 14px;
+      gap: 5px;
+      padding: 0 4px;
+      margin-bottom: 12px;
       flex-wrap: wrap;
     }
 
     .warn-badge {
-      padding: 5px 9px;
-      border-radius: 8px;
-      font-size: 0.68rem;
+      padding: 4px 8px;
+      border-radius: 7px;
+      font-size: 0.62rem;
       font-weight: 800;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
       color: rgba(255, 255, 255, 0.28);
@@ -449,55 +395,57 @@
       color: #ffb300;
     }
 
-    /* Sensor Grid */
+    /* Sensor Grid - Compacto */
     .grid-title {
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       font-weight: 800;
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
       color: var(--text-dim);
-      margin: 16px 0 8px 4px;
+      margin: 12px 0 6px 3px;
       text-transform: uppercase;
     }
     .sensor-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      gap: 7px;
     }
     .sensor-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: var(--card-radius);
-      padding: 12px 14px;
+      border-radius: 12px;
+      padding: 8px 11px;
       position: relative;
     }
     .sensor-label {
-      font-size: 0.72rem;
+      font-size: 0.64rem;
       color: var(--text-dim);
       font-weight: 600;
+      line-height: 1.15;
     }
     .sensor-val-wrap {
       display: flex;
       align-items: baseline;
-      gap: 4px;
-      margin-top: 4px;
+      gap: 3px;
+      margin-top: 2px;
     }
     .sensor-val {
-      font-size: 1.45rem;
+      font-size: 1.18rem;
       font-weight: 800;
       color: #fff;
       font-variant-numeric: tabular-nums;
+      line-height: 1.1;
     }
     .sensor-unit {
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       color: var(--text-dim);
       font-weight: 600;
     }
     .sensor-bar-bg {
       width: 100%;
-      height: 4px;
+      height: 3px;
       background: rgba(255, 255, 255, 0.08);
       border-radius: 2px;
-      margin-top: 8px;
+      margin-top: 5px;
       overflow: hidden;
     }
     .sensor-bar-fill {
@@ -903,10 +851,6 @@
       
       <!-- RELOJ IZQUIERDO: TACÓMETRO RPM -->
       <div class="pod-side pod-rpm">
-        <div class="pod-header">
-          <span class="pod-title">RPM</span>
-          <span id="badgeVtecMini" class="pod-mini-badge">VTEC</span>
-        </div>
         <div class="pod-svg-wrap">
           <svg class="pod-svg" viewBox="0 0 200 200">
             <defs>
@@ -966,10 +910,6 @@
 
       <!-- RELOJ CENTRAL: VELOCÍMETRO GRANDE (KM/H) -->
       <div class="pod-center pod-vss">
-        <div class="pod-header">
-          <span class="pod-title-center">VELOCIDAD</span>
-          <span id="badgeGearMini" class="pod-badge-gear">GEAR: N</span>
-        </div>
         <div class="pod-svg-wrap">
           <svg class="pod-svg" viewBox="0 0 240 240">
             <defs>
@@ -1035,10 +975,6 @@
 
       <!-- RELOJ DERECHO: TEMPERATURA REFRIGERANTE (ECT) -->
       <div class="pod-side pod-temp">
-        <div class="pod-header">
-          <span class="pod-title">TEMP</span>
-          <span id="badgeTempStatus" class="pod-mini-badge">ECT</span>
-        </div>
         <div class="pod-svg-wrap">
           <svg class="pod-svg" viewBox="0 0 200 200">
             <defs>
@@ -1109,8 +1045,17 @@
     </div>
 
     <!-- Section A: Motor & Marchas -->
-    <div class="grid-title">SECCIÓN A: Motor y Posición</div>
+    <div class="grid-title">SECCIÓN A: Motor y Marchas</div>
     <div class="sensor-grid">
+      <div class="sensor-card">
+        <div class="sensor-label">Marcha (Transmisión)</div>
+        <div class="sensor-val-wrap">
+          <span id="valGear" class="sensor-val" style="color: #00f0ff;">N</span>
+          <span class="sensor-unit">AT</span>
+        </div>
+        <div class="sensor-bar-bg"><div id="barGear" class="sensor-bar-fill" style="width: 20%; background: #00f0ff;"></div></div>
+      </div>
+
       <div class="sensor-card">
         <div class="sensor-label">Acelerador (TPS)</div>
         <div class="sensor-val-wrap">
@@ -1127,6 +1072,15 @@
           <span class="sensor-unit">%</span>
         </div>
         <div class="sensor-bar-bg"><div id="barIacv" class="sensor-bar-fill"></div></div>
+      </div>
+
+      <div class="sensor-card">
+        <div class="sensor-label">Presión Barométrica</div>
+        <div class="sensor-val-wrap">
+          <span id="valBaro" class="sensor-val">101</span>
+          <span class="sensor-unit">kPa</span>
+        </div>
+        <div style="font-size: 0.65rem; color: var(--text-dim); margin-top: 3px;" id="valKnock">Knock: 0</div>
       </div>
     </div>
 
@@ -1726,17 +1680,6 @@
       const valRpm = document.getElementById('valRpm');
       if (valRpm) valRpm.textContent = d.rpm;
 
-      const vtecBadge = document.getElementById('badgeVtecMini');
-      if (vtecBadge) {
-        if (d.vtec) {
-          vtecBadge.classList.add('active-vtec');
-          vtecBadge.textContent = 'VTEC ON';
-        } else {
-          vtecBadge.classList.remove('active-vtec');
-          vtecBadge.textContent = 'VTEC';
-        }
-      }
-
       // 2. Reloj Central: Velocímetro Grande (0 a 220 KM/H)
       const maxVss = 220;
       const vssPct = Math.min(Math.max(d.vss / maxVss, 0), 1);
@@ -1747,13 +1690,6 @@
       const valVss = document.getElementById('valVss');
       if (valVss) valVss.textContent = d.vss;
 
-      const gearBadge = document.getElementById('badgeGearMini');
-      if (gearBadge) {
-        gearBadge.textContent = `GEAR: ${GEAR_NAMES[d.gear] || 'N'}`;
-        if (d.gear > 0) gearBadge.classList.add('active-gear');
-        else gearBadge.classList.remove('active-gear');
-      }
-
       // 3. Reloj Derecho: Temperatura Refrigerante ECT (0 a 130 °C)
       const maxEct = 130;
       const ectPct = Math.min(Math.max(d.ect / maxEct, 0), 1);
@@ -1763,23 +1699,6 @@
       if (ectArc) ectArc.style.strokeDashoffset = ectOffset;
       const valEctGauge = document.getElementById('valEctGauge');
       if (valEctGauge) valEctGauge.textContent = d.ect;
-
-      const badgeTemp = document.getElementById('badgeTempStatus');
-      if (badgeTemp) {
-        if (d.ect >= 105) {
-          badgeTemp.textContent = 'CALIENTE';
-          badgeTemp.style.color = '#ff1744';
-          badgeTemp.style.borderColor = '#ff1744';
-        } else if (d.ect < 65) {
-          badgeTemp.textContent = 'FRÍO';
-          badgeTemp.style.color = '#00b4d8';
-          badgeTemp.style.borderColor = '#00b4d8';
-        } else {
-          badgeTemp.textContent = 'ECT';
-          badgeTemp.style.color = '#00e676';
-          badgeTemp.style.borderColor = 'rgba(0, 230, 118, 0.4)';
-        }
-      }
 
       // 4. Barra de Testigos / Warning Badges
       const isCelOn = d.mil || (d.dtcCount > 0);
@@ -1792,7 +1711,11 @@
       const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
       const setWidth = (id, val) => { const el = document.getElementById(id); if (el) el.style.width = val; };
 
-      setTxt('pillGear', `GEAR: ${GEAR_NAMES[d.gear] || 'N'}`);
+      setTxt('valGear', GEAR_NAMES[d.gear] || 'N');
+      const gearPcts = [0, 25, 50, 75, 100];
+      setWidth('barGear', (gearPcts[d.gear] || 0) + '%');
+      setTxt('valBaro', d.baro || 101);
+      setTxt('valKnock', `Knock: ${d.knock || 0}`);
 
       const linkPill = document.getElementById('pillLink');
       if (linkPill) {
