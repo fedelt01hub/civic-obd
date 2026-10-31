@@ -1486,6 +1486,8 @@
 
     function onBleDisconnected() {
       isConnected = false;
+      bleCmdQueue.length = 0;
+      isBleWriting = false;
       releaseWakeLock();
       updateBleUi(false);
       console.log('[BLE] Desconectado.');
@@ -1507,14 +1509,27 @@
       }
     }
 
+    let isBleWriting = false;
+    const bleCmdQueue = [];
+
     async function sendBleCmd(cmd) {
       if (!rxChar || !isConnected) return;
-      try {
-        const encoder = new TextEncoder();
-        await rxChar.writeValue(encoder.encode(cmd));
-      } catch (e) {
-        console.error('Error enviando comando BLE:', e);
+      // Evitar acumular múltiples GET_DIAG repetidos en la cola
+      if (cmd === 'GET_DIAG' && bleCmdQueue.includes('GET_DIAG')) return;
+      bleCmdQueue.push(cmd);
+      if (isBleWriting) return;
+
+      isBleWriting = true;
+      while (bleCmdQueue.length > 0 && rxChar && isConnected) {
+        const nextCmd = bleCmdQueue.shift();
+        try {
+          const encoder = new TextEncoder();
+          await rxChar.writeValue(encoder.encode(nextCmd));
+        } catch (err) {
+          console.error('Error enviando comando BLE:', nextCmd, err);
+        }
       }
+      isBleWriting = false;
     }
 
     // =========================================================================
@@ -1588,20 +1603,22 @@
         return;
       }
 
-      // Reensamblaje de fragmentos de texto / JSON (delimitado por \n o llaves completas)
+      // Si empieza por 0xA5 pero no cumplió la condición anterior (trama truncada o ruido), descartar
+      if (firstByte === 0xA5) return;
+
+      // Reensamblaje seguro de fragmentos JSON delimitados por '\n'
       try {
-        bleTextBuffer += textDecoder.decode(value);
+        bleTextBuffer += textDecoder.decode(value, { stream: true });
+        if (bleTextBuffer.length > 4096) bleTextBuffer = ''; // Protección contra desbordamiento
         while (bleTextBuffer.includes('\n')) {
           const idx = bleTextBuffer.indexOf('\n');
           const line = bleTextBuffer.substring(0, idx).trim();
           bleTextBuffer = bleTextBuffer.substring(idx + 1);
-          if (line.length > 0 && line.startsWith('{') && line.endsWith('}')) {
-            handleJsonMessage(line);
+          const startBrace = line.indexOf('{');
+          const endBrace = line.lastIndexOf('}');
+          if (startBrace !== -1 && endBrace > startBrace) {
+            handleJsonMessage(line.substring(startBrace, endBrace + 1));
           }
-        }
-        if (bleTextBuffer.trim().startsWith('{') && bleTextBuffer.trim().endsWith('}')) {
-          handleJsonMessage(bleTextBuffer.trim());
-          bleTextBuffer = '';
         }
       } catch (err) {
         console.error('Error procesando texto BLE:', err);
@@ -1623,9 +1640,16 @@
           if (rawContainer && (msg.row0 || msg.row1 || msg.d8 !== undefined)) {
             const d8 = (msg.d8 !== undefined) ? msg.d8 : 0;
             const d10 = (msg.d10 !== undefined) ? msg.d10 : 0;
+            const d11 = (msg.d11 !== undefined) ? msg.d11 : 0;
             const rawEld = (msg.rawEld !== undefined) ? msg.rawEld : 0;
             const eldVolt = (rawEld / 51.0).toFixed(2);
             const eldState = rawEld >= 250 ? '5.00V (Sin sensor ELD en caja fusibles / Circuito abierto)' : `${((245 - rawEld) * 0.35).toFixed(1)} A estimado`;
+
+            const rawO2Sec = (msg.rawO2Sec !== undefined) ? msg.rawO2Sec : 0;
+            const o2SecVolt = (rawO2Sec / 51.3).toFixed(2);
+            const o2SecState = rawO2Sec === 0
+              ? '0.00V (Circuito abierto / Sensor S2 inactivo - Causa Código 63)'
+              : `${o2SecVolt} V (Señal activa)`;
 
             const bitBadge = (name, val, activeColor = '#00e676') => `
               <div style="display:inline-flex; flex-direction:column; align-items:center; margin: 3px; padding: 5px 7px; background: ${val ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.35)'}; border-radius: 6px; border: 1px solid ${val ? activeColor : 'rgba(255,255,255,0.1)'}; min-width: 52px;">
@@ -1669,13 +1693,22 @@
                   <div style="color: var(--text-dim); font-size: 0.75rem;">Carga Alternador ALT FR: <strong style="color: var(--text);">${currentData ? currentData.altFr : 0}%</strong></div>
                 </div>
 
+                <div style="font-size: 0.75rem; font-weight: bold; color: var(--primary); margin-top: 8px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                  Sensor O2 Secundario Post-Catalizador (Byte 0x16)
+                </div>
+                <div style="font-size: 0.8rem; background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 6px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.06); line-height: 1.5;">
+                  <div>Byte O2 S2 ADC: <strong style="color:var(--text);">${rawO2Sec}</strong> (0x${rawO2Sec.toString(16).toUpperCase().padStart(2, '0')}) | <strong>${o2SecVolt} V</strong></div>
+                  <div style="color: var(--text-dim); font-size: 0.75rem;">Estado: <span style="color: ${rawO2Sec === 0 ? '#ff1744' : 'var(--vtec)'}; font-weight: bold;">${o2SecState}</span></div>
+                </div>
+
                 <div style="font-size: 0.72rem; color: var(--text-dim); font-family: monospace; line-height: 1.5; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px; word-break: break-all;">
-                  <div><strong style="color:var(--primary);">Fila 0x00:</strong> ${msg.row0 || 'N/A'}</div>
+                  <div><strong style="color:var(--primary);">Fila 0x00:</strong> ${msg.row0 || 'N/A'} (d[11]=0x${d11.toString(16).toUpperCase().padStart(2, '0')})</div>
                   <div style="margin-top: 4px;"><strong style="color:var(--primary);">Fila 0x10:</strong> ${msg.row1 || 'N/A'}</div>
-                  ${msg.row2 ? `<div style="margin-top: 4px;"><strong style="color:var(--primary);">Fila 0x20:</strong> ${msg.row2}</div>` : ''}
-                  ${msg.row3 ? `<div style="margin-top: 4px;"><strong style="color:var(--primary);">Fila 0x30:</strong> ${msg.row3}</div>` : ''}
-                  ${msg.dtc0 ? `<div style="margin-top: 4px;"><strong style="color:#ffb300;">DTC 0x40:</strong> ${msg.dtc0}</div>` : ''}
-                  ${msg.dtc1 ? `<div style="margin-top: 4px;"><strong style="color:#ffb300;">DTC 0x50:</strong> ${msg.dtc1}</div>` : ''}
+                  <div style="margin-top: 4px;"><strong style="color:var(--primary);">Fila 0x20:</strong> ${msg.row2 || 'N/A'}</div>
+                  <div style="margin-top: 4px;"><strong style="color:var(--primary);">Fila 0x30:</strong> ${msg.row3 || 'N/A'}</div>
+                  <div style="margin-top: 4px;"><strong style="color:#ffb300;">DTC 0x40:</strong> ${msg.dtc0 || '(Escanear Códigos para consultar)'}</div>
+                  <div style="margin-top: 4px;"><strong style="color:#ffb300;">DTC 0x50:</strong> ${msg.dtc1 || '(Escanear Códigos para consultar)'}</div>
+                  <div style="margin-top: 4px;"><strong style="color:#ffb300;">DTC 0x60:</strong> ${msg.dtc2 || '(Escanear Códigos para consultar)'}</div>
                 </div>
               </div>
             `;
@@ -2009,9 +2042,10 @@
     // DIAGNOSTIC & DTC CODES
     // =========================================================================
     function fetchDtcs() {
+      bleCmdQueue.length = 0; // Limpiar GET_DIAG pendientes para prioridad inmediata
       sendBleCmd('GET_DTC');
       document.getElementById('dtcList').innerHTML =
-        '<div style="text-align:center; padding: 20px; color: var(--text-dim);">Consultando memoria 0x40-0x5F...</div>';
+        '<div style="text-align:center; padding: 20px; color: var(--text-dim);">Consultando memoria 0x40-0x6F de la ECU...</div>';
     }
 
     function renderDtcList(msg) {
@@ -2039,7 +2073,7 @@
           list.innerHTML = `
             <div style="text-align:center; padding: 24px; background: rgba(255,179,0,0.1); border-radius: 14px; border: 1px solid rgba(255,179,0,0.4);">
               <div style="font-weight: 800; font-size: 1.1rem; color: #ffb300; margin-bottom: 6px;">CHECK ENGINE ACTIVO (MIL)</div>
-              <div style="font-size: 0.85rem; color: #fff; margin-bottom: 6px;">Foco encendido en tablero sin códigos en rango 0x40-0x5F</div>
+              <div style="font-size: 0.85rem; color: #fff; margin-bottom: 6px;">Foco encendido en tablero sin códigos en rango 0x40-0x6F</div>
               <div style="font-size: 0.76rem; color: var(--text-dim); line-height: 1.4;">
                 La ECU tiene encendida la luz de aviso pero el código puede ser > 63 (EVAP, catalizador, fallo de encendido) o de la transmisión automática (destello de D4). Revisa la guía de códigos abajo.
               </div>
@@ -2069,13 +2103,15 @@
 
     function handleClearDtcResponse(msg) {
       if (msg.ack) {
-        if (msg.remaining === 0 && !msg.mil) {
+        if (msg.verifyOk && msg.remaining === 0 && !msg.mil) {
           alert('¡Códigos borrados y confirmados exitosamente por la ECU!');
+        } else if (!msg.verifyOk) {
+          alert('La ECU aceptó el borrado y se está reiniciando. Verificando memoria nuevamente...');
         } else {
           alert('La ECU aceptó el comando de borrado, pero la falla aún está físicamente presente (se volvió a detectar de inmediato). Revisa el sensor o circuito indicado.');
         }
       } else {
-        alert('La ECU no confirmó el comando de borrado. Asegúrate de tener el motor apagado con la llave en posición ON (II) y reintenta.');
+        alert('La ECU no confirmó el comando de borrado. IMPORTANTE: En el Civic 99 debes tener el MOTOR APAGADO y la llave en posición ON (II) para que la ECU permita borrar códigos.');
       }
       fetchDtcs();
     }
@@ -2088,6 +2124,9 @@
     }
     function executeClearDtcs() {
       closeModal();
+      bleCmdQueue.length = 0;
+      document.getElementById('dtcList').innerHTML =
+        '<div style="text-align:center; padding: 20px; color: var(--amber); font-weight: 700;">Enviando comando de reinicio (21 04 01 DA) a la ECU...</div>';
       sendBleCmd('CLEAR_DTC');
     }
 
@@ -2231,10 +2270,10 @@
     let diagPollInterval = null;
     function startDiagPolling() {
       if (diagPollInterval) clearInterval(diagPollInterval);
-      sendBleCmd('GET_DIAG');
+      if (isConnected) sendBleCmd('GET_DIAG');
       diagPollInterval = setInterval(() => {
-        if (bleConnected) sendBleCmd('GET_DIAG');
-      }, 1000);
+        if (isConnected) sendBleCmd('GET_DIAG');
+      }, 1500);
     }
 
     function stopDiagPolling() {
